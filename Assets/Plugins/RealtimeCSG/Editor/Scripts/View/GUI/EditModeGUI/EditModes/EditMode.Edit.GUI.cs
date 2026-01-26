@@ -47,7 +47,9 @@ namespace RealtimeCSG
 						buttonArea.y += 2;
 						buttonArea.height = 13;
 						buttonArea.width = 13;
-						if (GUI.Button(buttonArea, GUIContent.none, "WinBtnClose"))
+                        //if (GUI.Button(buttonArea, GUIContent.none, "WinBtnClose"))
+                        //if (GUI.Button(buttonArea, GUIContent.none, "ToolbarSearchCancelButton"))
+                        if (GUI.Button(buttonArea, GUIContent.none, "ButtonRight"))
 							EditModeToolWindowSceneGUI.GetWindow();
 						TooltipUtility.SetToolTip(CSG_GUIStyleUtility.PopOutTooltip, buttonArea);
 
