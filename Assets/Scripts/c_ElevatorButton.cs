@@ -44,10 +44,11 @@ public class c_ElevatorButton : MonoBehaviour
         }
         else if(!IsLookedAt && WasLookedAt)
         {
-            this_MeshRenderer.material = UnlockedMaterial;
+            this_MeshRenderer.material = UnselectedMaterial;
         }
 
         WasLookedAt = IsLookedAt;
+
         #endregion Set Button Material
     }
 }
