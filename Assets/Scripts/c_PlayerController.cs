@@ -30,17 +30,6 @@ public class c_PlayerController : MonoBehaviour
     {
         UPDATE_GetPlayerInput();
         UPDATE_PlayerMovement();
-
-        if(Input.GetKeyDown(KeyCode.O))
-        {
-            SceneManager.LoadScene("Level_1");
-            // SceneManager.UnloadSceneAsync("Level_2");
-        }
-        else if(Input.GetKeyDown(KeyCode.P))
-        {
-            SceneManager.LoadScene("Level_2");
-            // SceneManager.UnloadSceneAsync("Level_1");
-        }
     }
 
     Vector2 v2_PlayerInputVector;

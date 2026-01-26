@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class c_ElevatorScript : MonoBehaviour
 {
@@ -10,8 +11,13 @@ public class c_ElevatorScript : MonoBehaviour
     GameObject DoorLeftObject;
     GameObject DoorRightObject;
     
+    GameObject ElevatorModel;
     GameObject DoorColliderObject;
     Collider DoorCollider;
+
+    bool[] UnlockedFloors = new bool[10];
+    GameObject ElevatorButtonMenu;
+    GameObject[] ElevatorButtons;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -21,10 +27,26 @@ public class c_ElevatorScript : MonoBehaviour
         f_DoorsOpenPerc = 1f;
         flip = f_DoorsOpen;
 
-        DoorLeftObject = transform.Find("Model").Find("DoorLeft_Obj").gameObject;
-        DoorRightObject = transform.Find("Model").Find("DoorRight_Obj").gameObject;
+        ElevatorModel = transform.Find("Model").gameObject;
+
+        DoorLeftObject = ElevatorModel.transform.Find("DoorLeft_Obj").gameObject;
+        DoorRightObject = ElevatorModel.transform.Find("DoorRight_Obj").gameObject;
         DoorColliderObject = transform.Find("DoorCollider").gameObject;
         DoorCollider = DoorColliderObject.GetComponent<Collider>();
+
+        ElevatorButtonMenu = ElevatorModel.transform.Find("ButtonMenu").gameObject;
+
+        ElevatorButtons = new GameObject[10];
+        for (int i = 0; i < 10; i++)
+            ElevatorButtons[i] = ElevatorButtonMenu.transform.Find("mdl_Button_" + i).gameObject;
+
+        for (int i = 0; i < UnlockedFloors.Length; i++)
+        {
+            UnlockedFloors[i] = false;
+            ElevatorButtons[i].GetComponent<c_ElevatorButton>().SetLockedFloorState( UnlockedFloors[i] );
+        }
+
+        UnlockFloorNumber(1);
     }
 
     // Update is called once per frame
@@ -82,5 +104,27 @@ public class c_ElevatorScript : MonoBehaviour
         f_DoorsOpen = false;
 
         DoorCollider.isTrigger = true;
+    }
+
+    public void UnlockFloorNumber(int floorNum)
+    {
+        if (floorNum < 0 || floorNum > UnlockedFloors.Length)
+            return;
+
+        if(!UnlockedFloors[floorNum])
+            UnlockedFloors[floorNum] = true;
+
+        ElevatorButtons[floorNum].GetComponent<c_ElevatorButton>().SetLockedFloorState(UnlockedFloors[floorNum]);
+    }
+
+    public void GoToFloorNumber(int floorNum)
+    {
+        if (floorNum < 0 || floorNum > UnlockedFloors.Length)
+            return;
+
+        if (UnlockedFloors[floorNum])
+        {
+            SceneManager.LoadScene("Level_" + floorNum);
+        }
     }
 }
