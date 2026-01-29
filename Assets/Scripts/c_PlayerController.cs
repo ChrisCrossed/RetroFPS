@@ -102,24 +102,48 @@ public class c_PlayerController : MonoBehaviour
 
         #region Cast downward to ground
 
+        RaycastHit _vertHit;
         RaycastHit _hit;
         Vector3 playerVector = new Vector3();
 
         LayerMask_Ground = LayerMask.GetMask("Ground");
+        bool onGround = false;
+        bool groundDirectlyBeneath = false;
+        Vector3 directionOfSolidGround = new Vector3();
 
-        if (Physics.SphereCast(gameObject.transform.position, PlayerCollider.radius - 0.001f, Vector3.down, out _hit, PlayerCollider.radius + 0.25f, LayerMask_Ground))
+        // Run vert Raycast & SphereCast
+        if (Physics.Raycast(gameObject.transform.position, -Vector3.up, out _vertHit, PlayerCollider.radius + 0.71f, LayerMask_Ground))
         {
+            groundDirectlyBeneath = true;
+        }
+
+        if (Physics.SphereCast(gameObject.transform.position, PlayerCollider.radius - 0.001f, Vector3.down, out _hit, PlayerCollider.radius + 0.71f, LayerMask_Ground))
+        {
+            onGround = true;
+
             yVel = 0f;
 
             v3_InputVector = Vector3.ProjectOnPlane(v3_InputVector, -_hit.normal);
 
             playerVector = gameObject.transform.rotation * v3_InputVector;
 
+            PlayerController.Move(-Vector3.up * 0.1f);
+
+            if(!groundDirectlyBeneath)
+            {
+                // tan(x) where x is the angle from the _hit.point to the gameObject.transform.position
+
+                // if degrees is > ? then normalize the (x, 0, z) of the vector and push that direction (off the cliff) each frame by a little bit
+            }
+
             Debug.DrawRay(gameObject.transform.position, playerVector * 100.0f, Color.red);
         }
-        else
+        
+        if(!onGround)
         {
-            print("NOT Hit");
+            
+
+            
 
             yVel += Gravity * Time.deltaTime;
         }
