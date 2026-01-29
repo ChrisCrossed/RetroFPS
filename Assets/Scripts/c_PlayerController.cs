@@ -115,7 +115,7 @@ public class c_PlayerController : MonoBehaviour
 
             playerVector = gameObject.transform.rotation * v3_InputVector;
 
-            // Debug.DrawRay(gameObject.transform.position, playerVector * 100.0f, Color.red);
+            Debug.DrawRay(gameObject.transform.position, playerVector * 100.0f, Color.red);
         }
         else
         {
