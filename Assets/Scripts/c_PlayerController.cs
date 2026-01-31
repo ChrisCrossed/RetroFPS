@@ -102,39 +102,56 @@ public class c_PlayerController : MonoBehaviour
 
         #region Cast downward to ground
 
-        RaycastHit _vertHit;
         RaycastHit _hit;
         Vector3 playerVector = new Vector3();
 
         LayerMask_Ground = LayerMask.GetMask("Ground");
         bool onGround = false;
-        bool groundDirectlyBeneath = false;
-
 
         if (Physics.SphereCast(gameObject.transform.position, PlayerCollider.radius - 0.001f, Vector3.down, out _hit, PlayerCollider.radius + 0.71f, LayerMask_Ground))
         {
             onGround = true;
 
+            float contactDegrees = Vector3.Angle(-Vector3.up, -_hit.normal);
+            print(contactDegrees);
+
             yVel = 0f;
 
-            v3_InputVector = Vector3.ProjectOnPlane(v3_InputVector, -_hit.normal);
-
+            // Convert player's desired movement against the character's forward direction
             playerVector = gameObject.transform.rotation * v3_InputVector;
+
+            // Project the new vector against the ground's normal
+            v3_InputVector = Vector3.ProjectOnPlane(playerVector, -_hit.normal);
+
+            Debug.DrawRay(gameObject.transform.position, v3_InputVector * 5f, Color.red);
 
             PlayerController.Move(-Vector3.up * 0.1f);
 
-            Debug.DrawRay(gameObject.transform.position, playerVector * 100.0f, Color.red);
-
-            // FML
-            print(Vector3.Angle(-Vector3.up, -_hit.normal));
-            if(Vector3.Angle(-Vector3.up, -_hit.normal) <= 45f)
+            if (contactDegrees != 0)
             {
-                
-            }
-            else
-            {
+                if(!Physics.Raycast(gameObject.transform.position, Vector3.down, PlayerCollider.radius + 0.71f, LayerMask_Ground))
+                {
+                    Vector3 playerDir = gameObject.transform.position;
 
+                    Vector3 pushDir = _hit.point;
+                    pushDir.y = playerDir.y;
+
+                    print("Player: " + playerDir);
+                    print("hitPoint: " + pushDir);
+
+                    Vector3 finalDir = (playerDir - pushDir).normalized;
+
+                    Debug.DrawLine(playerDir, playerDir + finalDir * 5f, Color.green);
+                    // Debug.DrawRay(gameObject.transform.position, finalDir * 5f, Color.green);
+                }
             }
+
+            
+
+            
+
+            // Debug.DrawRay(gameObject.transform.position, playerVector * 100.0f, Color.red);
+
         }
         
         if(!onGround)
