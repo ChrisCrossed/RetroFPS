@@ -3,6 +3,7 @@ using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class c_PlayerController : MonoBehaviour
 {
@@ -25,6 +26,8 @@ public class c_PlayerController : MonoBehaviour
         PlayerCollider = gameObject.GetComponent<CapsuleCollider>();
         PlayerController = gameObject.GetComponent<CharacterController>();
         CameraObject = gameObject.transform.Find("Main Camera").gameObject;
+
+        TextUI = GameObject.Find("Text");
     }
 
     void START_Settings()
@@ -92,6 +95,8 @@ public class c_PlayerController : MonoBehaviour
     int LayerMask_Ground;
     float Gravity = -9.81f * 3.5f;
     float yVel;
+    Vector3 CliffPushVelocity;
+    GameObject TextUI;
     void UPDATE_PlayerMovement()
     {
         #region Convert player input into desired movement velocity
@@ -127,39 +132,65 @@ public class c_PlayerController : MonoBehaviour
 
             PlayerController.Move(-Vector3.up * 0.1f);
 
-            if (contactDegrees != 0)
+            #region Cliff Edge Check
+
+            string cliffMagText = "";
+            if (contactDegrees >= 20f)
+            {
+                if (!Physics.Raycast(gameObject.transform.position, Vector3.down, PlayerCollider.radius + 0.71f, LayerMask_Ground))
+                {
+                    Vector3 playerPos = gameObject.transform.position;
+                    Vector3 hitPos = _hit.point;
+                    playerPos.y = 0;
+                    hitPos.y = 0;
+                    Vector3 dir = hitPos - playerPos;
+                    dir.Normalize();
+                    Debug.DrawRay(gameObject.transform.position, -dir, Color.yellow);
+
+                    float pushPerc = (contactDegrees - 20f) / 50f;
+                    pushPerc *= 50f;
+                    CliffPushVelocity = (-dir * pushPerc * Time.deltaTime);
+                    cliffMagText = CliffPushVelocity.magnitude.ToString();
+                }
+            }
+            else
+                CliffPushVelocity = new Vector3();
+
+            TextUI.GetComponent<Text>().text = cliffMagText;
+            /*
+            if (contactDegrees >= 20f)
             {
                 if(!Physics.Raycast(gameObject.transform.position, Vector3.down, PlayerCollider.radius + 0.71f, LayerMask_Ground))
                 {
-                    Vector3 playerDir = gameObject.transform.position;
+                    Vector3 playerPos = gameObject.transform.position;
+                    Vector3 hitPos = _hit.point;
+                    playerPos.y = 0;
+                    hitPos.y = 0;
+                    Vector3 dir = hitPos - playerPos;
+                    dir.Normalize();
+                    Debug.DrawRay(gameObject.transform.position, -dir, Color.yellow);
 
-                    Vector3 pushDir = _hit.point;
-                    pushDir.y = playerDir.y;
-
-                    print("Player: " + playerDir);
-                    print("hitPoint: " + pushDir);
-
-                    Vector3 finalDir = (playerDir - pushDir).normalized;
-
-                    Debug.DrawLine(playerDir, playerDir + finalDir * 5f, Color.green);
-                    // Debug.DrawRay(gameObject.transform.position, finalDir * 5f, Color.green);
+                    float pushPerc = (contactDegrees - 20f) / 50f;
+                    pushPerc *= 50f;
+                    CliffPushVelocity = (-dir * pushPerc * Time.deltaTime);
                 }
+                else
+                    CliffPushVelocity = new Vector3();
             }
+            else
+                CliffPushVelocity = new Vector3();
+            */
 
-            
+            playerVector += CliffPushVelocity;
 
-            
+            #endregion Cliff Edge Check
 
             // Debug.DrawRay(gameObject.transform.position, playerVector * 100.0f, Color.red);
 
         }
-        
-        if(!onGround)
+
+        if (!onGround)
         {
-            
-
-            
-
             yVel += Gravity * Time.deltaTime;
         }
 
