@@ -42,6 +42,7 @@ public class c_PlayerController : MonoBehaviour
         UPDATE_GetPlayerInput();
         UPDATE_PlayerLook();
         UPDATE_PlayerMovement();
+        print(PlayerController.velocity.magnitude);
     }
 
     Vector2 v2_PlayerInputVector;
@@ -96,6 +97,7 @@ public class c_PlayerController : MonoBehaviour
     float Gravity = -9.81f * 3.5f;
     float yVel;
     Vector3 CliffPushVelocity;
+    float CliffPushSpeed = 3f;
     GameObject TextUI;
     void UPDATE_PlayerMovement()
     {
@@ -118,7 +120,7 @@ public class c_PlayerController : MonoBehaviour
             onGround = true;
 
             float contactDegrees = Vector3.Angle(-Vector3.up, -_hit.normal);
-            print(contactDegrees);
+            // print(contactDegrees);
 
             yVel = 0f;
 
@@ -148,9 +150,11 @@ public class c_PlayerController : MonoBehaviour
                     Debug.DrawRay(gameObject.transform.position, -dir, Color.yellow);
 
                     float pushPerc = (contactDegrees - 20f) / 50f;
-                    pushPerc *= 50f;
-                    CliffPushVelocity = (-dir * pushPerc * Time.deltaTime);
-                    cliffMagText = CliffPushVelocity.magnitude.ToString();
+                    // print(pushPerc);
+                    CliffPushVelocity = (-dir * pushPerc * CliffPushSpeed * Time.deltaTime);
+                    //pushPerc *= 50f;
+                    //CliffPushVelocity = (-dir * pushPerc * Time.deltaTime);
+                    //cliffMagText = CliffPushVelocity.magnitude.ToString();
                 }
             }
             else
