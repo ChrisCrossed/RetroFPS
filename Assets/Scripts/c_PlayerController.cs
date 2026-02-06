@@ -40,8 +40,16 @@ public class c_PlayerController : MonoBehaviour
     void Update()
     {
         UPDATE_GetPlayerInput();
-        UPDATE_PlayerLook();
+    }
+
+    private void FixedUpdate()
+    {
         UPDATE_PlayerMovement();
+    }
+
+    private void LateUpdate()
+    {
+        UPDATE_PlayerLook();
     }
 
     Vector2 v2_PlayerInputVector;
@@ -213,9 +221,9 @@ public class c_PlayerController : MonoBehaviour
 
     float minimumGroundAngle = 10f;
     float maximumGroundAngle = 80f;
-    float pushPercMultiplier = 10f;
-    float minimumPushMagnitude = 2f;
-    float maximumPushMagnitude = 10f;
+    float pushPercMultiplier = 20f;
+    float minimumPushMagnitude = 10f;
+    float maximumPushMagnitude = 25f;
     Vector3 CliffEdgeLogic(float _contactDegrees, RaycastHit _hit)
     {
         float colliderRadius = 0.5f;
@@ -227,8 +235,8 @@ public class c_PlayerController : MonoBehaviour
             {
                 // Slightly extends the player's CharacterController collider to forcibly push away from walls
                 // Think like a Pinball bumper.
-                colliderRadius += 0.1f;
-                colliderHeight += 0.1f;
+                //colliderRadius += 0.1f;
+                //colliderHeight += 0.1f;
 
                 Vector3 playerPos = gameObject.transform.position;
                 Vector3 hitPos = _hit.point;
@@ -246,7 +254,7 @@ public class c_PlayerController : MonoBehaviour
                 // if (pushPerc < 2f) pushPerc = 2f;
 
                 //CliffPushVelocity = (-dir * pushPerc * Time.fixedDeltaTime);
-                CliffPushVelocity = (-dir * pushPerc * (1 / 60f));
+                CliffPushVelocity = (-dir * pushPerc);
                 cliffMagText = "Push - " + CliffPushVelocity.magnitude;
                 print(pushPerc);
                 TextUI.GetComponent<Text>().text = "" + pushPerc;
@@ -258,7 +266,7 @@ public class c_PlayerController : MonoBehaviour
         PlayerCollider.radius = colliderRadius;
         PlayerCollider.height = colliderHeight;
 
-        return CliffPushVelocity;
+        return CliffPushVelocity * Time.deltaTime;
     }
 
     void CursorRaycastOptions( RaycastHit hit )
