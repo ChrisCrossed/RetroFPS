@@ -6,9 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Menu/Logo_Level10Games.unity
-    guid: 493355fd0f9919145b9fa2eb0f97ae8d
-  - enabled: 1
     path: Assets/Scenes/Levels/Test/Gym.unity
     guid: 187012f16a432634ba738bba8d61da8c
   - enabled: 1
@@ -41,6 +38,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Levels/Level_0.unity
     guid: cc48dfd3675b5474383f3aca9f61d738
+  - enabled: 1
+    path: Assets/Scenes/Menu/Logo_Level10Games.unity
+    guid: 493355fd0f9919145b9fa2eb0f97ae8d
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

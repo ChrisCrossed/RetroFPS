@@ -42,7 +42,6 @@ public class c_PlayerController : MonoBehaviour
         UPDATE_GetPlayerInput();
         UPDATE_PlayerLook();
         UPDATE_PlayerMovement();
-        print(PlayerController.velocity.magnitude);
     }
 
     Vector2 v2_PlayerInputVector;
@@ -88,7 +87,7 @@ public class c_PlayerController : MonoBehaviour
         {
             Debug.DrawLine(CameraObject.transform.position, _hit.point, Color.red);
 
-            CursorRaycastOptions(_hit);
+            // CursorRaycastOptions(_hit);
         }
     }
 
@@ -136,56 +135,7 @@ public class c_PlayerController : MonoBehaviour
 
             #region Cliff Edge Check
 
-            string cliffMagText = "";
-            if (contactDegrees >= 20f)
-            {
-                if (!Physics.Raycast(gameObject.transform.position, Vector3.down, PlayerCollider.radius + 0.71f, LayerMask_Ground))
-                {
-                    Vector3 playerPos = gameObject.transform.position;
-                    Vector3 hitPos = _hit.point;
-                    playerPos.y = 0;
-                    hitPos.y = 0;
-                    Vector3 dir = hitPos - playerPos;
-                    dir.Normalize();
-                    Debug.DrawRay(gameObject.transform.position, -dir, Color.yellow);
-
-                    float pushPerc = (contactDegrees - 20f) / 50f;
-                    // print(pushPerc);
-                    CliffPushVelocity = (-dir * pushPerc * CliffPushSpeed * Time.deltaTime);
-                    //pushPerc *= 50f;
-                    //CliffPushVelocity = (-dir * pushPerc * Time.deltaTime);
-                    //cliffMagText = CliffPushVelocity.magnitude.ToString();
-                }
-            }
-            else
-                CliffPushVelocity = new Vector3();
-
-            TextUI.GetComponent<Text>().text = cliffMagText;
-            /*
-            if (contactDegrees >= 20f)
-            {
-                if(!Physics.Raycast(gameObject.transform.position, Vector3.down, PlayerCollider.radius + 0.71f, LayerMask_Ground))
-                {
-                    Vector3 playerPos = gameObject.transform.position;
-                    Vector3 hitPos = _hit.point;
-                    playerPos.y = 0;
-                    hitPos.y = 0;
-                    Vector3 dir = hitPos - playerPos;
-                    dir.Normalize();
-                    Debug.DrawRay(gameObject.transform.position, -dir, Color.yellow);
-
-                    float pushPerc = (contactDegrees - 20f) / 50f;
-                    pushPerc *= 50f;
-                    CliffPushVelocity = (-dir * pushPerc * Time.deltaTime);
-                }
-                else
-                    CliffPushVelocity = new Vector3();
-            }
-            else
-                CliffPushVelocity = new Vector3();
-            */
-
-            playerVector += CliffPushVelocity;
+            playerVector += CliffEdgeLogic(contactDegrees, _hit);
 
             #endregion Cliff Edge Check
 
@@ -260,6 +210,56 @@ public class c_PlayerController : MonoBehaviour
     #endregion Settings
 
     #region Gameplay Functions
+
+    float minimumGroundAngle = 10f;
+    float maximumGroundAngle = 80f;
+    float pushPercMultiplier = 10f;
+    float minimumPushMagnitude = 2f;
+    float maximumPushMagnitude = 10f;
+    Vector3 CliffEdgeLogic(float _contactDegrees, RaycastHit _hit)
+    {
+        float colliderRadius = 0.5f;
+        float colliderHeight = 2.0f;
+        string cliffMagText = "";
+        if (_contactDegrees >= minimumGroundAngle)
+        {
+            if (!Physics.Raycast(gameObject.transform.position, Vector3.down, PlayerCollider.radius + 0.71f, LayerMask_Ground))
+            {
+                // Slightly extends the player's CharacterController collider to forcibly push away from walls
+                // Think like a Pinball bumper.
+                colliderRadius += 0.1f;
+                colliderHeight += 0.1f;
+
+                Vector3 playerPos = gameObject.transform.position;
+                Vector3 hitPos = _hit.point;
+                playerPos.y = 0;
+                hitPos.y = 0;
+                Vector3 dir = hitPos - playerPos;
+                dir.Normalize();
+                Debug.DrawRay(gameObject.transform.position, -dir, Color.yellow);
+
+                // Creates a percentage between the minimum degree to begin pushing (at 0.0f) to max speed (1.0f)
+                float pushPerc = (_contactDegrees - minimumGroundAngle) / (maximumGroundAngle - minimumGroundAngle);
+                pushPerc *= pushPercMultiplier;
+
+                pushPerc = Mathf.Clamp(pushPerc, minimumPushMagnitude, maximumPushMagnitude);
+                // if (pushPerc < 2f) pushPerc = 2f;
+
+                //CliffPushVelocity = (-dir * pushPerc * Time.fixedDeltaTime);
+                CliffPushVelocity = (-dir * pushPerc * (1 / 60f));
+                cliffMagText = "Push - " + CliffPushVelocity.magnitude;
+                print(pushPerc);
+                TextUI.GetComponent<Text>().text = "" + pushPerc;
+            }
+        }
+        else
+            CliffPushVelocity = new Vector3();
+
+        PlayerCollider.radius = colliderRadius;
+        PlayerCollider.height = colliderHeight;
+
+        return CliffPushVelocity;
+    }
 
     void CursorRaycastOptions( RaycastHit hit )
     {
