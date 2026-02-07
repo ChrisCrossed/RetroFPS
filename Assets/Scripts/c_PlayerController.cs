@@ -40,11 +40,12 @@ public class c_PlayerController : MonoBehaviour
     void Update()
     {
         UPDATE_GetPlayerInput();
+        UPDATE_PlayerMovement();
     }
 
     private void FixedUpdate()
     {
-        UPDATE_PlayerMovement();
+        FIXEDUPDATE_CliffEdgeVelocity();
     }
 
     private void LateUpdate()
@@ -143,7 +144,8 @@ public class c_PlayerController : MonoBehaviour
 
             #region Cliff Edge Check
 
-            playerVector += CliffEdgeLogic(contactDegrees, _hit);
+            bool isCliffLogicEnabled = contactDegrees >= minimumGroundAngle;
+            SetCliffLogicState(isCliffLogicEnabled, contactDegrees, _hit);
 
             #endregion Cliff Edge Check
 
@@ -166,7 +168,28 @@ public class c_PlayerController : MonoBehaviour
 
     }
 
+    bool CliffEdgeLogic_IsEnabled;
+    float CliffEdgeLogic_ContactDegrees;
+    RaycastHit CliffEdgeLogic_hit;
+    Vector3 CliffEdgeLogic_CliffVector;
+    void SetCliffLogicState(bool _isEnabled, float _contactDegrees, RaycastHit _hit)
+    {
+        CliffEdgeLogic_IsEnabled = _isEnabled;
+        CliffEdgeLogic_ContactDegrees = _contactDegrees;
+        CliffEdgeLogic_hit = _hit;
+    }
 
+    void FIXEDUPDATE_CliffEdgeVelocity()
+    {
+        print("Enabled: " + CliffEdgeLogic_IsEnabled);
+
+        if (CliffEdgeLogic_IsEnabled)
+        {
+            CliffEdgeLogic_CliffVector = CliffEdgeLogic(CliffEdgeLogic_ContactDegrees, CliffEdgeLogic_hit);
+
+            PlayerController.Move(CliffEdgeLogic_CliffVector * Time.fixedDeltaTime);
+        }
+    }
     #region Math Functions
 
     Vector2 MovementVelocityPerc(Vector2 VelPercValue, Vector2 PlayerInputValue)
@@ -235,8 +258,8 @@ public class c_PlayerController : MonoBehaviour
             {
                 // Slightly extends the player's CharacterController collider to forcibly push away from walls
                 // Think like a Pinball bumper.
-                //colliderRadius += 0.1f;
-                //colliderHeight += 0.1f;
+                colliderRadius += 0.1f;
+                colliderHeight += 0.1f;
 
                 Vector3 playerPos = gameObject.transform.position;
                 Vector3 hitPos = _hit.point;
@@ -251,7 +274,6 @@ public class c_PlayerController : MonoBehaviour
                 pushPerc *= pushPercMultiplier;
 
                 pushPerc = Mathf.Clamp(pushPerc, minimumPushMagnitude, maximumPushMagnitude);
-                // if (pushPerc < 2f) pushPerc = 2f;
 
                 //CliffPushVelocity = (-dir * pushPerc * Time.fixedDeltaTime);
                 CliffPushVelocity = (-dir * pushPerc);
