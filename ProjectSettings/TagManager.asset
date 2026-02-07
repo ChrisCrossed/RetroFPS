@@ -8,6 +8,7 @@ TagManager:
   - Ground
   - Wall
   - ElevatorButton
+  - WeaponCamera
   layers:
   - Default
   - TransparentFX
@@ -17,7 +18,7 @@ TagManager:
   - UI
   - Ground
   - GameObject
-  - 
+  - Weapon
   - 
   - 
   - 

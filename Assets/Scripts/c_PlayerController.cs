@@ -177,8 +177,6 @@ public class c_PlayerController : MonoBehaviour
 
     void FIXEDUPDATE_CliffEdgeVelocity()
     {
-        print("Enabled: " + CliffEdgeLogic_IsEnabled);
-
         if (CliffEdgeLogic_IsEnabled)
         {
             CliffEdgeLogic_CliffVector = CliffEdgeLogic(CliffEdgeLogic_ContactDegrees, CliffEdgeLogic_hit);
