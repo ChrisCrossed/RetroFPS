@@ -26,8 +26,6 @@ public class c_PlayerController : MonoBehaviour
         PlayerCollider = gameObject.GetComponent<CapsuleCollider>();
         PlayerController = gameObject.GetComponent<CharacterController>();
         CameraObject = gameObject.transform.Find("Main Camera").gameObject;
-
-        TextUI = GameObject.Find("Text");
     }
 
     void START_Settings()
@@ -105,8 +103,6 @@ public class c_PlayerController : MonoBehaviour
     float Gravity = -9.81f * 3.5f;
     float yVel;
     Vector3 CliffPushVelocity;
-    float CliffPushSpeed = 3f;
-    GameObject TextUI;
     void UPDATE_PlayerMovement()
     {
         #region Convert player input into desired movement velocity
@@ -251,7 +247,6 @@ public class c_PlayerController : MonoBehaviour
     {
         float colliderRadius = 0.5f;
         float colliderHeight = 2.0f;
-        string cliffMagText = "";
         if (_contactDegrees >= minimumGroundAngle)
         {
             if (!Physics.Raycast(gameObject.transform.position, Vector3.down, PlayerCollider.radius + 0.71f, LayerMask_Ground))
@@ -267,7 +262,7 @@ public class c_PlayerController : MonoBehaviour
                 hitPos.y = 0;
                 Vector3 dir = hitPos - playerPos;
                 dir.Normalize();
-                Debug.DrawRay(gameObject.transform.position, -dir, Color.yellow);
+                // Debug.DrawRay(gameObject.transform.position, -dir, Color.yellow);
 
                 // Creates a percentage between the minimum degree to begin pushing (at 0.0f) to max speed (1.0f)
                 float pushPerc = (_contactDegrees - minimumGroundAngle) / (maximumGroundAngle - minimumGroundAngle);
@@ -275,11 +270,7 @@ public class c_PlayerController : MonoBehaviour
 
                 pushPerc = Mathf.Clamp(pushPerc, minimumPushMagnitude, maximumPushMagnitude);
 
-                //CliffPushVelocity = (-dir * pushPerc * Time.fixedDeltaTime);
                 CliffPushVelocity = (-dir * pushPerc);
-                cliffMagText = "Push - " + CliffPushVelocity.magnitude;
-                print(pushPerc);
-                TextUI.GetComponent<Text>().text = "" + pushPerc;
             }
         }
         else
@@ -288,7 +279,7 @@ public class c_PlayerController : MonoBehaviour
         PlayerCollider.radius = colliderRadius;
         PlayerCollider.height = colliderHeight;
 
-        return CliffPushVelocity * Time.deltaTime;
+        return CliffPushVelocity * Time.fixedDeltaTime;
     }
 
     void CursorRaycastOptions( RaycastHit hit )
