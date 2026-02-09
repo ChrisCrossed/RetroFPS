@@ -88,13 +88,13 @@ public class c_PlayerController : MonoBehaviour
         }
 
         RaycastHit _hit;
-        int layerMask = LayerMask.GetMask("Ground", "GameObject");
+        int layerMask = LayerMask.GetMask("Geo", "GameObject");
 
         if(Physics.Raycast(CameraObject.transform.position, CameraObject.transform.forward, out _hit, 1000f, layerMask))
         {
             Debug.DrawLine(CameraObject.transform.position, _hit.point, Color.red);
 
-            // CursorRaycastOptions(_hit);
+            CursorRaycastOptions(_hit);
         }
     }
 
@@ -116,7 +116,7 @@ public class c_PlayerController : MonoBehaviour
         RaycastHit _hit;
         Vector3 playerVector = new Vector3();
 
-        LayerMask_Ground = LayerMask.GetMask("Ground");
+        LayerMask_Ground = LayerMask.GetMask("Geo");
         bool onGround = false;
 
         if (Physics.SphereCast(gameObject.transform.position, PlayerCollider.radius - 0.001f, Vector3.down, out _hit, PlayerCollider.radius + 0.71f, LayerMask_Ground))
@@ -294,6 +294,10 @@ public class c_PlayerController : MonoBehaviour
 
             case "Wall":
                 print("Wall");
+                break;
+
+            case "GameObject":
+                print("GameObject");
                 break;
 
             case "ElevatorButton":
