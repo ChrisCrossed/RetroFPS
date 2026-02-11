@@ -26,6 +26,8 @@ public class c_PlayerController : MonoBehaviour
         PlayerCollider = gameObject.GetComponent<CapsuleCollider>();
         PlayerController = gameObject.GetComponent<CharacterController>();
         CameraObject = gameObject.transform.Find("Main Camera").gameObject;
+
+        LastViewedObject = null;
     }
 
     void START_Settings()
@@ -280,32 +282,69 @@ public class c_PlayerController : MonoBehaviour
         return CliffPushVelocity * Time.fixedDeltaTime;
     }
 
+    GameObject LastViewedObject;
     void CursorRaycastOptions( RaycastHit hit )
     {
-        switch( hit.collider.tag )
+        if (LastViewedObject != hit.transform.gameObject && LastViewedObject != null)
         {
-            case "Enemy":
-                print("Enemy");
-                break;
+            switch (LastViewedObject.tag)
+            {
+                case "Enemy":
+                    print("Enemy");
+                    break;
 
-            case "Ground":
-                print("Ground");
-                break;
+                case "Ground":
+                    print("Ground");
+                    break;
 
-            case "Wall":
-                print("Wall");
-                break;
+                case "Wall":
+                    print("Wall");
+                    break;
 
-            case "GameObject":
-                print("GameObject");
-                break;
+                case "GameObject":
+                    print("GameObject");
+                    break;
 
-            case "ElevatorButton":
-                hit.transform.GetComponent<c_ElevatorButton>().LookAtButton();
-                break;
+                case "ElevatorButton":
+                    LastViewedObject.transform.GetComponent<c_ElevatorButton>().LookAtButton = false;
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
+            }
+
+            LastViewedObject = null;
+        }
+
+        if (LastViewedObject == null)
+        {
+            LastViewedObject = hit.transform.gameObject;
+
+            switch (LastViewedObject.tag)
+            {
+                case "Enemy":
+                    print("Enemy");
+                    break;
+
+                case "Ground":
+                    print("Ground");
+                    break;
+
+                case "Wall":
+                    print("Wall");
+                    break;
+
+                case "GameObject":
+                    print("GameObject");
+                    break;
+
+                case "ElevatorButton":
+                    LastViewedObject.GetComponent<c_ElevatorButton>().LookAtButton = true;
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 

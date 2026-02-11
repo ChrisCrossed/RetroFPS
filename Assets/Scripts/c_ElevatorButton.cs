@@ -26,28 +26,25 @@ public class c_ElevatorButton : MonoBehaviour
         // print(gameObject.name + " " + IsUnlocked);
     }
 
-    bool IsLookedAt;
-    public void LookAtButton()
-    {
-        IsLookedAt = true;
-    }
+    public bool LookAtButton;
 
     bool WasLookedAt;
     // Update is called once per frame
     void Update()
     {
         #region Set Button Material
-        if (IsLookedAt && !WasLookedAt)
+        if (LookAtButton && !WasLookedAt)
         {
             if (IsUnlocked) this_MeshRenderer.material = UnlockedMaterial;
             else this_MeshRenderer.material = LockedMaterial;
         }
-        else if(!IsLookedAt && WasLookedAt)
+        else if(!LookAtButton && WasLookedAt)
         {
             this_MeshRenderer.material = UnselectedMaterial;
         }
 
-        WasLookedAt = IsLookedAt;
+        WasLookedAt = LookAtButton;
+        
 
         #endregion Set Button Material
     }
