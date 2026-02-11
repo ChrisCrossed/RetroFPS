@@ -11,6 +11,8 @@ public class c_PlayerController : MonoBehaviour
     CharacterController PlayerController;
     GameObject CameraObject;
 
+    
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -22,12 +24,15 @@ public class c_PlayerController : MonoBehaviour
     {
         IA_Move = InputSystem.actions.FindAction("Move");
         IA_Look = InputSystem.actions.FindAction("Look");
+        IA_PrimaryAttack = InputSystem.actions.FindAction("Attack");
 
         PlayerCollider = gameObject.GetComponent<CapsuleCollider>();
         PlayerController = gameObject.GetComponent<CharacterController>();
         CameraObject = gameObject.transform.Find("Main Camera").gameObject;
 
         LastViewedObject = null;
+
+        CurrentWeapon = gameObject.transform.Find("WeaponCamera").transform.Find("WeaponSystem").transform.Find("Weapon_Pistol").gameObject;
     }
 
     void START_Settings()
@@ -50,7 +55,8 @@ public class c_PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
-        UPDATE_PlayerLook();
+        LATEUPDATE_PlayerLook();
+        LATEUPDATE_PlayerInteract();
     }
 
     Vector2 v2_PlayerInputVector;
@@ -61,16 +67,22 @@ public class c_PlayerController : MonoBehaviour
     Vector2 v2_MouseInput;
     [SerializeField] float HorizontalLookMultiplier = 5f;
     [SerializeField] float VerticalLookMultiplier = 5f;
+
+    InputAction IA_PrimaryAttack;
+    bool AttackPressed;
+
     void UPDATE_GetPlayerInput()
     {
         v2_PlayerInputVector = IA_Move.ReadValue<Vector2>();
         v2_PlayerInputVector.Normalize();
 
         v2_MouseInput = IA_Look.ReadValue<Vector2>();
+
+        AttackPressed = IA_PrimaryAttack.IsPressed();
     }
 
     float CameraAngle = 0f;
-    void UPDATE_PlayerLook()
+    void LATEUPDATE_PlayerLook()
     {
         if (v2_MouseInput == new Vector2())
             return;
@@ -94,10 +106,37 @@ public class c_PlayerController : MonoBehaviour
 
         if(Physics.Raycast(CameraObject.transform.position, CameraObject.transform.forward, out _hit, 1000f, layerMask))
         {
-            Debug.DrawLine(CameraObject.transform.position, _hit.point, Color.red);
+            CameraRaycastHitObject = _hit;
 
             CursorRaycastOptions(_hit);
         }
+    }
+
+    // Used for Weapon Fire & various interactions (Use)
+    bool AttackPressed_OLD;
+    RaycastHit CameraRaycastHitObject;
+    Transform Weapon_BackPoint;
+    Transform Weapon_FrontPoint;
+    GameObject CurrentWeapon;
+    void LATEUPDATE_PlayerInteract()
+    {
+        if(AttackPressed && !AttackPressed_OLD)
+        {
+            Debug.DrawLine(CameraObject.transform.position, CameraRaycastHitObject.point, Color.red, 0.1f);
+
+            // These will properly update when the player switches weapons
+            Weapon_BackPoint = CurrentWeapon.transform.Find("Weapon_BackPoint").transform;
+
+            Weapon_FrontPoint = CurrentWeapon.transform.Find("Weapon_FrontPoint").transform;
+
+            print("Attack");
+        }
+        else if(!AttackPressed && AttackPressed_OLD)
+        {
+            print("Attack Released");
+        }
+
+        AttackPressed_OLD = AttackPressed;
     }
 
     float VelocitySpeedMult = 8f;
@@ -136,7 +175,7 @@ public class c_PlayerController : MonoBehaviour
             // Project the new vector against the ground's normal
             v3_InputVector = Vector3.ProjectOnPlane(playerVector, -_hit.normal);
 
-            Debug.DrawRay(gameObject.transform.position, v3_InputVector * 5f, Color.red);
+            // Debug.DrawRay(gameObject.transform.position, v3_InputVector * 5f, Color.red);
 
             PlayerController.Move(-Vector3.up * 0.1f);
 
