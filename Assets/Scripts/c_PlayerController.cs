@@ -122,14 +122,31 @@ public class c_PlayerController : MonoBehaviour
     {
         if(AttackPressed && !AttackPressed_OLD)
         {
+            LayerMask mask = LayerMask.GetMask("Geo", "GameObject");
+            RaycastHit _hit;
+
             Debug.DrawLine(CameraObject.transform.position, CameraRaycastHitObject.point, Color.red, 0.1f);
 
             // These will properly update when the player switches weapons
             Weapon_BackPoint = CurrentWeapon.transform.Find("Weapon_BackPoint").transform;
 
             Weapon_FrontPoint = CurrentWeapon.transform.Find("Weapon_FrontPoint").transform;
+            Vector3 dir = Weapon_BackPoint.position - Weapon_FrontPoint.position;
+            dir.Normalize();
+            float dist = Vector3.Distance(Weapon_BackPoint.position, Weapon_FrontPoint.position);
 
-            print("Attack");
+            // Check from back of gun to front of gun. If it's clear, then fire weapon from front of the gun.
+            if(!Physics.Raycast(Weapon_BackPoint.position, dir, out _hit, dist + 0.05f, mask ))
+            {
+                //
+                Debug.DrawLine(Weapon_FrontPoint.position, CameraRaycastHitObject.point, Color.yellow, 0.1f);
+            }
+            else
+            {
+                // Otherwise, apply impact at _hit.point & fire 'blank'
+            }
+
+                print("Attack");
         }
         else if(!AttackPressed && AttackPressed_OLD)
         {
