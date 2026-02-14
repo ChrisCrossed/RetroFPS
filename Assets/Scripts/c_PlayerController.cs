@@ -140,6 +140,10 @@ public class c_PlayerController : MonoBehaviour
             {
                 //
                 Debug.DrawLine(Weapon_FrontPoint.position, CameraRaycastHitObject.point, Color.yellow, 0.1f);
+
+                WEAPON_OBJ currWeap = new WEAPON_OBJ();
+                currWeap = new Weapon_Pistol();
+                print(currWeap.DamagePerProjectile());
             }
             else
             {
