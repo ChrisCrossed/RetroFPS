@@ -8,9 +8,20 @@ public enum WeaponProjectileType
     Null
 }
 
+public enum WeaponTypes
+{
+    Fists,
+    Spear,
+    Pistol,
+    Shotgun
+}
+
 
 class WEAPON_OBJ : MonoBehaviour
 {
+    public WEAPON_OBJ weapon_Obj { get; private set; }
+
+
     public virtual WeaponProjectileType ProjectileType()
     {
         return WeaponProjectileType.Null;

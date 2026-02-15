@@ -5,6 +5,14 @@ class Weapon_Pistol : WEAPON_OBJ
     [SerializeField]
     WeaponProjectileType _projectileType = WeaponProjectileType.Null;
 
+    [SerializeField]
+    int DamagePerAmmo = 0;
+
+    public Weapon_Pistol()
+    {
+
+    }
+
     public override WeaponProjectileType ProjectileType()
     {
         return _projectileType;
@@ -13,7 +21,7 @@ class Weapon_Pistol : WEAPON_OBJ
     public override int DamagePerProjectile()
     {
         // return base.damage();
-        return 5;
+        return DamagePerAmmo;
     }
 
     public override float FireRate()

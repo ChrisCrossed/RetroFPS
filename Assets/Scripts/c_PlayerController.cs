@@ -30,9 +30,7 @@ public class c_PlayerController : MonoBehaviour
         PlayerController = gameObject.GetComponent<CharacterController>();
         CameraObject = gameObject.transform.Find("Main Camera").gameObject;
 
-        LastViewedObject = null;
-
-        CurrentWeapon = gameObject.transform.Find("WeaponCamera").transform.Find("WeaponSystem").transform.Find("Weapon_Pistol").gameObject;
+        
     }
 
     void START_Settings()
@@ -56,7 +54,6 @@ public class c_PlayerController : MonoBehaviour
     private void LateUpdate()
     {
         LATEUPDATE_PlayerLook();
-        LATEUPDATE_PlayerInteract();
     }
 
     Vector2 v2_PlayerInputVector;
@@ -101,64 +98,9 @@ public class c_PlayerController : MonoBehaviour
             CameraObject.transform.localEulerAngles = new Vector3(CameraAngle, 0f, 0f);
         }
 
-        RaycastHit _hit;
-        int layerMask = LayerMask.GetMask("Geo", "GameObject");
-
-        if(Physics.Raycast(CameraObject.transform.position, CameraObject.transform.forward, out _hit, 1000f, layerMask))
-        {
-            CameraRaycastHitObject = _hit;
-
-            CursorRaycastOptions(_hit);
-        }
+        
     }
 
-    // Used for Weapon Fire & various interactions (Use)
-    bool AttackPressed_OLD;
-    RaycastHit CameraRaycastHitObject;
-    Transform Weapon_BackPoint;
-    Transform Weapon_FrontPoint;
-    GameObject CurrentWeapon;
-    void LATEUPDATE_PlayerInteract()
-    {
-        if(AttackPressed && !AttackPressed_OLD)
-        {
-            LayerMask mask = LayerMask.GetMask("Geo", "GameObject");
-            RaycastHit _hit;
-
-            Debug.DrawLine(CameraObject.transform.position, CameraRaycastHitObject.point, Color.red, 0.1f);
-
-            // These will properly update when the player switches weapons
-            Weapon_BackPoint = CurrentWeapon.transform.Find("Weapon_BackPoint").transform;
-
-            Weapon_FrontPoint = CurrentWeapon.transform.Find("Weapon_FrontPoint").transform;
-            Vector3 dir = Weapon_BackPoint.position - Weapon_FrontPoint.position;
-            dir.Normalize();
-            float dist = Vector3.Distance(Weapon_BackPoint.position, Weapon_FrontPoint.position);
-
-            // Check from back of gun to front of gun. If it's clear, then fire weapon from front of the gun.
-            if(!Physics.Raycast(Weapon_BackPoint.position, dir, out _hit, dist + 0.05f, mask ))
-            {
-                //
-                Debug.DrawLine(Weapon_FrontPoint.position, CameraRaycastHitObject.point, Color.yellow, 0.1f);
-
-                WEAPON_OBJ currWeap = new WEAPON_OBJ();
-                currWeap = new Weapon_Pistol();
-                print(currWeap.DamagePerProjectile());
-            }
-            else
-            {
-                // Otherwise, apply impact at _hit.point & fire 'blank'
-            }
-
-                print("Attack");
-        }
-        else if(!AttackPressed && AttackPressed_OLD)
-        {
-            print("Attack Released");
-        }
-
-        AttackPressed_OLD = AttackPressed;
-    }
 
     float VelocitySpeedMult = 8f;
     int LayerMask_Ground;
@@ -342,71 +284,7 @@ public class c_PlayerController : MonoBehaviour
         return CliffPushVelocity * Time.fixedDeltaTime;
     }
 
-    GameObject LastViewedObject;
-    void CursorRaycastOptions( RaycastHit hit )
-    {
-        if (LastViewedObject != hit.transform.gameObject && LastViewedObject != null)
-        {
-            switch (LastViewedObject.tag)
-            {
-                case "Enemy":
-                    print("Enemy");
-                    break;
-
-                case "Ground":
-                    print("Ground");
-                    break;
-
-                case "Wall":
-                    print("Wall");
-                    break;
-
-                case "GameObject":
-                    print("GameObject");
-                    break;
-
-                case "ElevatorButton":
-                    LastViewedObject.transform.GetComponent<c_ElevatorButton>().LookAtButton = false;
-                    break;
-
-                default:
-                    break;
-            }
-
-            LastViewedObject = null;
-        }
-
-        if (LastViewedObject == null)
-        {
-            LastViewedObject = hit.transform.gameObject;
-
-            switch (LastViewedObject.tag)
-            {
-                case "Enemy":
-                    print("Enemy");
-                    break;
-
-                case "Ground":
-                    print("Ground");
-                    break;
-
-                case "Wall":
-                    print("Wall");
-                    break;
-
-                case "GameObject":
-                    print("GameObject");
-                    break;
-
-                case "ElevatorButton":
-                    LastViewedObject.GetComponent<c_ElevatorButton>().LookAtButton = true;
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
+    
 
     #endregion Gameplay Functions
 
