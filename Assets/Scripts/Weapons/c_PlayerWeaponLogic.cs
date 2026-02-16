@@ -31,11 +31,14 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         AssignNewWeapon(WeaponTypes.Pistol);
     }
 
-    WEAPON_OBJ currWeap = new WEAPON_OBJ();
+    WEAPON_OBJ currWeap;
     Weapon_Pistol weapon_Pistol;
+    Weapon_Shotgun weapon_Shotgun;
     void Init_WeaponTypes()
     {
-        weapon_Pistol = new Weapon_Pistol();
+        weapon_Pistol = gameObject.GetComponent<Weapon_Pistol>();
+        weapon_Shotgun = gameObject.GetComponent<Weapon_Shotgun>();
+
     }
 
     void AssignNewWeapon(WeaponTypes _weaponType)
@@ -50,6 +53,7 @@ public class c_PlayerWeaponLogic : MonoBehaviour
                 currWeap = weapon_Pistol;
                 break;
             case WeaponTypes.Shotgun:
+                currWeap = weapon_Shotgun;
                 break;
             default:
                 break;

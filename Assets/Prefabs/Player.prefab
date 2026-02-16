@@ -167,6 +167,7 @@ GameObject:
   - component: {fileID: 975551632375739424}
   - component: {fileID: 8696472406699709276}
   - component: {fileID: 4215854899767533920}
+  - component: {fileID: 4215638063593025873}
   m_Layer: 3
   m_Name: WeaponClass
   m_TagString: Untagged
@@ -214,7 +215,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapon_Pistol
   _projectileType: 1
-  DamagePerAmmo: 5
+  _damagePerProjectile: 1
+  _numProjectiles: 1
+  _shotsPerSecond: 1
+  _projectileObject: {fileID: 0}
 --- !u!114 &4215854899767533920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,6 +231,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536a3990b5d406c4c963a3d9e00684e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapon_Shotgun
+  _projectileType: 1
+  _damagePerProjectile: 1
+  _numProjectiles: 1
+  _shotsPerSecond: 1
+  _projectileObject: {fileID: 0}
+--- !u!114 &4215638063593025873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2130841365398257847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7900e48638823914dad3f20e241befe6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WEAPON_Fists
+  _projectileType: 3
+  _damagePerProjectile: 1
+  _numProjectiles: 1
+  _shotsPerSecond: 1
+  _projectileObject: {fileID: 0}
 --- !u!1 &3890547124208464392
 GameObject:
   m_ObjectHideFlags: 0

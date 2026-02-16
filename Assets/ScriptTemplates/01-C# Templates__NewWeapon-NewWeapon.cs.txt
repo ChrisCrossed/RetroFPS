@@ -1,27 +1,27 @@
 using UnityEngine;
 
-class Weapon_Shotgun : WEAPON_OBJ
+class #SCRIPTNAME# : WEAPON_OBJ
 {
     public override WeaponProjectileType ProjectileType()
     {
         return _projectileType;
     }
-
+    
     public override int DamagePerProjectile()
     {
         return _damagePerProjectile;
     }
-
+    
     public override int NumProjectiles()
     {
         return _numProjectiles;
     }
-
+    
     public override float FireRate()
     {
         return _shotsPerSecond;
     }
-
+    
     public override GameObject ProjectileObject()
     {
         return _projectileObject;

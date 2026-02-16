@@ -729,7 +729,7 @@ MonoBehaviour:
     meshQuery:
       layers: 16777223
       maskAndChannels: 234881031
-    surfaceParameter: 46132
+    surfaceParameter: 46136
     meshQueryIndex: 0
     subMeshQueryIndex: 0
     geometryHashValue: -1258151019656803104
@@ -2509,7 +2509,7 @@ MonoBehaviour:
     meshQuery:
       layers: 33554440
       maskAndChannels: 8
-    surfaceParameter: 45930
+    surfaceParameter: 45934
     meshQueryIndex: 1
     subMeshQueryIndex: 0
     geometryHashValue: -1258151019656803104
@@ -3584,10 +3584,6 @@ PrefabInstance:
     - target: {fileID: 7025747485879881498, guid: bd4adef7336f1c44f9be6fd608b86f8e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8696472406699709276, guid: bd4adef7336f1c44f9be6fd608b86f8e, type: 3}
-      propertyPath: DamagePerAmmo
-      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

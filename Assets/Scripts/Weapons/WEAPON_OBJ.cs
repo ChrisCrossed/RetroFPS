@@ -19,29 +19,38 @@ public enum WeaponTypes
 
 class WEAPON_OBJ : MonoBehaviour
 {
-    public WEAPON_OBJ weapon_Obj { get; private set; }
-
-
+    [SerializeField]
+    protected WeaponProjectileType _projectileType = WeaponProjectileType.Null;
     public virtual WeaponProjectileType ProjectileType()
     {
         return WeaponProjectileType.Null;
     }
 
-    protected int _numProjectiles = 1;
-    public virtual int NumProjectiles()
-    {
-        return _numProjectiles;
-    }
-
+    [SerializeField]
     protected int _damagePerProjectile = 1;
     public virtual int DamagePerProjectile()
     {
         return _damagePerProjectile;
     }
 
-    protected float _fireRate = 1.0f;
+    [SerializeField]
+    protected int _numProjectiles = 1;
+    public virtual int NumProjectiles()
+    {
+        return _numProjectiles;
+    }
+
+    [SerializeField]
+    protected float _shotsPerSecond = 1.0f;
     public virtual float FireRate()
     {
-        return _fireRate;
+        return _shotsPerSecond;
+    }
+
+    [SerializeField]
+    protected GameObject _projectileObject;
+    public virtual GameObject ProjectileObject()
+    {
+        return _projectileObject;
     }
 }

@@ -2,30 +2,28 @@ using UnityEngine;
 
 class Weapon_Pistol : WEAPON_OBJ
 {
-    [SerializeField]
-    WeaponProjectileType _projectileType = WeaponProjectileType.Null;
-
-    [SerializeField]
-    int DamagePerAmmo = 0;
-
-    public Weapon_Pistol()
-    {
-
-    }
-
     public override WeaponProjectileType ProjectileType()
     {
         return _projectileType;
     }
-    
+
     public override int DamagePerProjectile()
     {
-        // return base.damage();
-        return DamagePerAmmo;
+        return _damagePerProjectile;
+    }
+
+    public override int NumProjectiles()
+    {
+        return _numProjectiles;
     }
 
     public override float FireRate()
     {
-        return _fireRate;
+        return _shotsPerSecond;
+    }
+
+    public override GameObject ProjectileObject()
+    {
+        return _projectileObject;
     }
 }
