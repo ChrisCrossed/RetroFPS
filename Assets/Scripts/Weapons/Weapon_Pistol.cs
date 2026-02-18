@@ -2,28 +2,95 @@ using UnityEngine;
 
 class Weapon_Pistol : WEAPON_OBJ
 {
-    public override WeaponProjectileType ProjectileType()
+    #region Weapon Stats
+    private protected override WeaponProjectileType ProjectileType()
     {
         return _projectileType;
     }
 
-    public override int DamagePerProjectile()
+    private protected override int DamagePerProjectile()
     {
         return _damagePerProjectile;
     }
 
-    public override int NumProjectiles()
+    private protected override int NumProjectiles()
     {
         return _numProjectiles;
     }
 
-    public override float FireRate()
+    private protected override float FireRate()
     {
         return _shotsPerSecond;
     }
 
-    public override GameObject ProjectileObject()
+    private protected override GameObject ProjectileObject()
     {
         return _projectileObject;
+    }
+
+    #endregion Weapon Stats
+
+    #region Weapon Actions
+
+    public override void PullWeaponTrigger()
+    {
+        base.PullWeaponTrigger();
+    }
+
+    public override void ReleaseWeaponTrigger()
+    {
+        base.ReleaseWeaponTrigger();
+    }
+
+    public override void ReloadWeapon()
+    {
+        base.ReloadWeapon();
+    }
+
+    #endregion Weapon Actions
+
+    protected override void Update()
+    {
+        if(TriggerPulled)
+        {
+            print("FIRE");
+        }
+
+        /*
+            if (AttackPressed && !AttackPressed_OLD)
+            {
+
+                Debug.DrawLine(CameraObject.transform.position, CameraRaycastHitObject.point, Color.red, 0.1f);
+
+                // These will properly update when the player switches weapons
+                Weapon_BackPoint = CurrentWeapon.transform.Find("Weapon_BackPoint").transform;
+
+                Weapon_FrontPoint = CurrentWeapon.transform.Find("Weapon_FrontPoint").transform;
+                Vector3 dir = Weapon_BackPoint.position - Weapon_FrontPoint.position;
+                dir.Normalize();
+                float dist = Vector3.Distance(Weapon_BackPoint.position, Weapon_FrontPoint.position);
+
+                // Check from back of gun to front of gun. If it's clear, then fire weapon from front of the gun.
+                if (!Physics.Raycast(Weapon_BackPoint.position, dir, out _hit, dist + 0.05f, layerMask))
+                {
+                    //
+                    Debug.DrawLine(Weapon_FrontPoint.position, CameraRaycastHitObject.point, Color.yellow, 0.1f);
+
+                
+                    print(currWeap.DamagePerProjectile());
+                }
+                else
+                {
+                    // Otherwise, apply impact at _hit.point & fire 'blank'
+                }
+
+                print("Attack");
+            }
+            else if (!AttackPressed && AttackPressed_OLD)
+            {
+                print("Attack Released");
+            }
+         
+         */
     }
 }

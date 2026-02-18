@@ -92,38 +92,13 @@ public class c_PlayerWeaponLogic : MonoBehaviour
 
         if (AttackPressed && !AttackPressed_OLD)
         {
-
-            Debug.DrawLine(CameraObject.transform.position, CameraRaycastHitObject.point, Color.red, 0.1f);
-
-            // These will properly update when the player switches weapons
-            Weapon_BackPoint = CurrentWeapon.transform.Find("Weapon_BackPoint").transform;
-
-            Weapon_FrontPoint = CurrentWeapon.transform.Find("Weapon_FrontPoint").transform;
-            Vector3 dir = Weapon_BackPoint.position - Weapon_FrontPoint.position;
-            dir.Normalize();
-            float dist = Vector3.Distance(Weapon_BackPoint.position, Weapon_FrontPoint.position);
-
-            // Check from back of gun to front of gun. If it's clear, then fire weapon from front of the gun.
-            if (!Physics.Raycast(Weapon_BackPoint.position, dir, out _hit, dist + 0.05f, layerMask))
-            {
-                //
-                Debug.DrawLine(Weapon_FrontPoint.position, CameraRaycastHitObject.point, Color.yellow, 0.1f);
-
-                
-                print(currWeap.DamagePerProjectile());
-            }
-            else
-            {
-                // Otherwise, apply impact at _hit.point & fire 'blank'
-            }
-
-            print("Attack");
+            currWeap.PullWeaponTrigger();
         }
         else if (!AttackPressed && AttackPressed_OLD)
         {
-            print("Attack Released");
+            currWeap.ReleaseWeaponTrigger();
         }
-
+        
         AttackPressed_OLD = AttackPressed;
     }
 

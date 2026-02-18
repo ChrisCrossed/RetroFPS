@@ -2,28 +2,67 @@ using UnityEngine;
 
 class #SCRIPTNAME# : WEAPON_OBJ
 {
-    public override WeaponProjectileType ProjectileType()
+    #region Weapon Stats
+
+    [SerializeField]
+    private protected WeaponProjectileType _projectileType = WeaponProjectileType.Null;
+    private protected virtual WeaponProjectileType ProjectileType()
     {
         return _projectileType;
     }
     
-    public override int DamagePerProjectile()
+    [SerializeField]
+    private protected int _damagePerProjectile = 1;
+    private protected virtual int DamagePerProjectile()
     {
         return _damagePerProjectile;
     }
     
-    public override int NumProjectiles()
+    [SerializeField]
+    private protected int _numProjectiles = 1;
+    private protected override int NumProjectiles()
     {
         return _numProjectiles;
     }
     
-    public override float FireRate()
+    [SerializeField]
+    private protected float _shotsPerSecond = 1.0f;
+    private protected virtual float FireRate()
     {
         return _shotsPerSecond;
     }
     
-    public override GameObject ProjectileObject()
+    [SerializeField]
+    private protected GameObject _projectileObject;
+    private protected virtual GameObject ProjectileObject()
     {
         return _projectileObject;
+    }
+
+    #endregion Weapon Stats
+
+    #region Weapon Actions
+
+    private protected bool TriggerPulled;
+    public virtual void PullWeaponTrigger()
+    {
+        TriggerPulled = true;
+    }
+
+    public virtual void ReleaseWeaponTrigger()
+    {
+        TriggerPulled = false;
+    }
+
+    public virtual void ReloadWeapon()
+    {
+
+    }
+
+    #endregion Weapon Actions
+
+    protected virtual void Update()
+    {
+        
     }
 }
