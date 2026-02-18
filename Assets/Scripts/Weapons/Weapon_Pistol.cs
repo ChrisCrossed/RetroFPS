@@ -57,65 +57,11 @@ class Weapon_Pistol : WEAPON_OBJ
         {
             RaycastHit _hit;
 
-            Vector3 dir = Weapon_BackPoint.position - Weapon_FrontPoint.position;
-            dir.Normalize();
-            float dist = Vector3.Distance(Weapon_BackPoint.position, Weapon_FrontPoint.position);
-
-            // From Camera to Hit Point
-            Debug.DrawLine(CameraObject.transform.position, CameraRaycastHitObject.point, Color.red, 0.1f);
-
-            // Check from back of gun to front of gun. If it's clear, then fire weapon from front of the gun.
-            if (!Physics.Raycast(Weapon_BackPoint.position, dir, out _hit, dist + 0.05f, layerMask))
+            if(GetAimedAtObject( out _hit ))
             {
-                //
-                Debug.DrawLine(Weapon_FrontPoint.position, CameraRaycastHitObject.point, Color.yellow, 0.1f);
-
-
-                print("Damage: " + DamagePerProjectile());
+                print("Hit: " + _hit.transform.name);
             }
-            else
-            {
-                // Otherwise, apply impact at _hit.point & fire 'blank'
-            }
-
-            print("Attack!!!");
+            else print("EMPTY");
         }
-
-        /*
-            if (AttackPressed && !AttackPressed_OLD)
-            {
-
-                Debug.DrawLine(CameraObject.transform.position, CameraRaycastHitObject.point, Color.red, 0.1f);
-
-                // These will properly update when the player switches weapons
-                Weapon_BackPoint = CurrentWeapon.transform.Find("Weapon_BackPoint").transform;
-
-                Weapon_FrontPoint = CurrentWeapon.transform.Find("Weapon_FrontPoint").transform;
-                Vector3 dir = Weapon_BackPoint.position - Weapon_FrontPoint.position;
-                dir.Normalize();
-                float dist = Vector3.Distance(Weapon_BackPoint.position, Weapon_FrontPoint.position);
-
-                // Check from back of gun to front of gun. If it's clear, then fire weapon from front of the gun.
-                if (!Physics.Raycast(Weapon_BackPoint.position, dir, out _hit, dist + 0.05f, layerMask))
-                {
-                    //
-                    Debug.DrawLine(Weapon_FrontPoint.position, CameraRaycastHitObject.point, Color.yellow, 0.1f);
-
-                
-                    print(currWeap.DamagePerProjectile());
-                }
-                else
-                {
-                    // Otherwise, apply impact at _hit.point & fire 'blank'
-                }
-
-                print("Attack");
-            }
-            else if (!AttackPressed && AttackPressed_OLD)
-            {
-                print("Attack Released");
-            }
-         
-         */
     }
 }
