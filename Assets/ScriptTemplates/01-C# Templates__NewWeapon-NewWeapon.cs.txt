@@ -44,8 +44,10 @@ class #SCRIPTNAME# : WEAPON_OBJ
     #region Weapon Actions
 
     private protected bool TriggerPulled;
-    public virtual void PullWeaponTrigger()
+    public virtual void PullWeaponTrigger( RaycastHit _cameraRaycastHitObject )
     {
+        CameraRaycastHitObject = _cameraRaycastHitObject;
+
         TriggerPulled = true;
     }
 

@@ -20,6 +20,38 @@ public enum WeaponTypes
 
 class WEAPON_OBJ : MonoBehaviour
 {
+    #region Init / Connections
+
+    private protected GameObject CameraObject;
+    private protected RaycastHit CameraRaycastHitObject;
+    private protected Transform Weapon_BackPoint;
+    private protected Transform Weapon_FrontPoint;
+    private protected GameObject CurrentWeapon;
+
+    private protected int layerMask;
+
+    private protected virtual void Start()
+    {
+        START_Connections();
+    }
+
+    private protected virtual void START_Connections()
+    {
+        CameraObject = gameObject.transform.parent.Find("Main Camera").gameObject;
+
+        layerMask = LayerMask.GetMask("Geo", "GameObject");
+    }
+
+    public virtual void ApplyWeaponObjects(GameObject _currentWeapon)
+    {
+        CurrentWeapon = _currentWeapon;
+
+        Weapon_BackPoint = CurrentWeapon.transform.Find("Weapon_BackPoint").transform;
+        Weapon_FrontPoint = CurrentWeapon.transform.Find("Weapon_FrontPoint").transform;
+    }
+
+    #endregion Init / Connections
+
     #region Weapon Stats
 
     [SerializeField]
@@ -62,8 +94,10 @@ class WEAPON_OBJ : MonoBehaviour
     #region Weapon Actions
 
     private protected bool TriggerPulled;
-    public virtual void PullWeaponTrigger()
+    public virtual void PullWeaponTrigger( RaycastHit _cameraRaycastHitObject )
     {
+        CameraRaycastHitObject = _cameraRaycastHitObject;
+
         TriggerPulled = true;
     }
 
@@ -76,6 +110,10 @@ class WEAPON_OBJ : MonoBehaviour
     {
 
     }
+
+    // Holster Weapon function?
+
+    // Draw Weapon function?
 
     #endregion Weapon Actions
 

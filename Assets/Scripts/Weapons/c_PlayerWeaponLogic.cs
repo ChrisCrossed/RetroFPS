@@ -34,11 +34,12 @@ public class c_PlayerWeaponLogic : MonoBehaviour
     WEAPON_OBJ currWeap;
     Weapon_Pistol weapon_Pistol;
     Weapon_Shotgun weapon_Shotgun;
+    Weapon_Fists weapon_Fists;
     void Init_WeaponTypes()
     {
         weapon_Pistol = gameObject.GetComponent<Weapon_Pistol>();
         weapon_Shotgun = gameObject.GetComponent<Weapon_Shotgun>();
-
+        weapon_Fists = gameObject.GetComponent<Weapon_Fists>();
     }
 
     void AssignNewWeapon(WeaponTypes _weaponType)
@@ -46,6 +47,7 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         switch (_weaponType)
         {
             case WeaponTypes.Fists:
+                currWeap = weapon_Fists;
                 break;
             case WeaponTypes.Spear:
                 break;
@@ -58,6 +60,8 @@ public class c_PlayerWeaponLogic : MonoBehaviour
             default:
                 break;
         }
+
+        currWeap.ApplyWeaponObjects(CurrentWeapon);
     }
 
     // Update is called once per frame
@@ -69,8 +73,6 @@ public class c_PlayerWeaponLogic : MonoBehaviour
     // Used for Weapon Fire & various interactions (Use)
     bool AttackPressed_OLD;
     RaycastHit CameraRaycastHitObject;
-    Transform Weapon_BackPoint;
-    Transform Weapon_FrontPoint;
     GameObject CurrentWeapon;
     void LATEUPDATE_PlayerInteract()
     {
@@ -92,7 +94,7 @@ public class c_PlayerWeaponLogic : MonoBehaviour
 
         if (AttackPressed && !AttackPressed_OLD)
         {
-            currWeap.PullWeaponTrigger();
+            currWeap.PullWeaponTrigger(CameraRaycastHitObject);
         }
         else if (!AttackPressed && AttackPressed_OLD)
         {

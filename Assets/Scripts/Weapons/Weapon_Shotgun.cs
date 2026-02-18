@@ -32,9 +32,11 @@ class Weapon_Shotgun : WEAPON_OBJ
 
     #region Weapon Actions
 
-    public override void PullWeaponTrigger()
+    public override void PullWeaponTrigger(RaycastHit _cameraRaycastHitObject)
     {
-        base.PullWeaponTrigger();
+        CameraRaycastHitObject = _cameraRaycastHitObject;
+
+        TriggerPulled = true;
     }
 
     public override void ReleaseWeaponTrigger()

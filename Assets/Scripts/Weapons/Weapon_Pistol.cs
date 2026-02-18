@@ -32,9 +32,11 @@ class Weapon_Pistol : WEAPON_OBJ
 
     #region Weapon Actions
 
-    public override void PullWeaponTrigger()
+    public override void PullWeaponTrigger( RaycastHit _cameraRaycastHitObject )
     {
-        base.PullWeaponTrigger();
+        CameraRaycastHitObject = _cameraRaycastHitObject;
+
+        TriggerPulled = true;
     }
 
     public override void ReleaseWeaponTrigger()
@@ -53,7 +55,30 @@ class Weapon_Pistol : WEAPON_OBJ
     {
         if(TriggerPulled)
         {
-            print("FIRE");
+            RaycastHit _hit;
+
+            Vector3 dir = Weapon_BackPoint.position - Weapon_FrontPoint.position;
+            dir.Normalize();
+            float dist = Vector3.Distance(Weapon_BackPoint.position, Weapon_FrontPoint.position);
+
+            // From Camera to Hit Point
+            Debug.DrawLine(CameraObject.transform.position, CameraRaycastHitObject.point, Color.red, 0.1f);
+
+            // Check from back of gun to front of gun. If it's clear, then fire weapon from front of the gun.
+            if (!Physics.Raycast(Weapon_BackPoint.position, dir, out _hit, dist + 0.05f, layerMask))
+            {
+                //
+                Debug.DrawLine(Weapon_FrontPoint.position, CameraRaycastHitObject.point, Color.yellow, 0.1f);
+
+
+                print("Damage: " + DamagePerProjectile());
+            }
+            else
+            {
+                // Otherwise, apply impact at _hit.point & fire 'blank'
+            }
+
+            print("Attack!!!");
         }
 
         /*
