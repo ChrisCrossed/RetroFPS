@@ -39,7 +39,7 @@ class WEAPON_OBJ : MonoBehaviour
     {
         CameraObject = gameObject.transform.parent.Find("Main Camera").gameObject;
 
-        layerMask = LayerMask.GetMask("Geo", "GameObject");
+        
     }
 
     public virtual void ApplyWeaponObjects(GameObject _currentWeapon)
@@ -117,6 +117,19 @@ class WEAPON_OBJ : MonoBehaviour
 
     protected virtual bool GetAimedAtObject( out RaycastHit _newHit, float _maxDistance = 1000f)
     {
+        RaycastHit _hit = new RaycastHit();
+        bool objectHit = false;
+        layerMask = LayerMask.GetMask("Geo", "GameObject");
+
+        Vector3 dir = Weapon_BackPoint.position - Weapon_FrontPoint.position;
+        dir.Normalize();
+        float weaponBarrelLength = Vector3.Distance(Weapon_BackPoint.position, Weapon_FrontPoint.position);
+
+        Physics.Raycast(Weapon_BackPoint.position, dir, out _hit, weaponBarrelLength + 0.05f, layerMask);
+
+        Debug.DrawLine(CameraObject.transform.position, _hit.point, Color.yellow, 0.1f);
+
+        /*
         // RaycastHit _hit = new RaycastHit();
         bool objectHit = false;
 
@@ -129,6 +142,9 @@ class WEAPON_OBJ : MonoBehaviour
         {
             // Show line from CAMERA to hit point
             Debug.DrawLine(CameraObject.transform.position, _newHit.point, Color.yellow, 0.1f);
+
+            dir = Weapon_FrontPoint.position - _newHit.point;
+            dir.Normalize();
 
             if (Physics.Raycast(Weapon_FrontPoint.position, dir, out _newHit, _maxDistance, layerMask))
             {
@@ -146,7 +162,9 @@ class WEAPON_OBJ : MonoBehaviour
             // Otherwise, apply impact at _hit.point & fire 'blank'
             objectHit = true;
         }
+        */
 
+        _newHit = _hit;
         return objectHit;
     }
 
