@@ -57,7 +57,7 @@ class Weapon_Pistol : WEAPON_OBJ
 
             if(GetAimedAtObject( out _hit ))
             {
-                print("Hit: " + _hit.transform.name);
+                print("Hit: " + _hit.transform.name + " for " + (DamagePerProjectile() * NumProjectiles() + " damage."));
             }
             else print("EMPTY");
         }

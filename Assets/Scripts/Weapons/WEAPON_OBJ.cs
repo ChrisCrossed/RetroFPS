@@ -109,9 +109,17 @@ class WEAPON_OBJ : MonoBehaviour
 
     }
 
-    // Holster Weapon function?
+    // Draw Weapon function
+    public virtual void DrawWeapon()
+    {
 
-    // Draw Weapon function?
+    }
+
+    // Holster Weapon function
+    public virtual void HolsterWeapon()
+    {
+
+    }
 
     protected virtual bool GetAimedAtObject( out RaycastHit _newHit, float _maxDistance = 1000f)
     {
@@ -146,47 +154,7 @@ class WEAPON_OBJ : MonoBehaviour
 
                 objectHit = true;
             }
-            
         }
-
-        
-
-        // Debug.DrawLine(CameraObject.transform.position, _hit.point, Color.yellow, 0.1f);
-
-        /*
-        // RaycastHit _hit = new RaycastHit();
-        bool objectHit = false;
-
-        Vector3 dir = Weapon_BackPoint.position - Weapon_FrontPoint.position;
-        dir.Normalize();
-        float weaponBarrelLength = Vector3.Distance(Weapon_BackPoint.position, Weapon_FrontPoint.position);
-
-        // Check from back of gun to front of gun. If it's clear, then fire weapon from front of the gun.
-        if (!Physics.Raycast(Weapon_BackPoint.position, dir, out _newHit, weaponBarrelLength + 0.05f, layerMask))
-        {
-            // Show line from CAMERA to hit point
-            Debug.DrawLine(CameraObject.transform.position, _newHit.point, Color.yellow, 0.1f);
-
-            dir = Weapon_FrontPoint.position - _newHit.point;
-            dir.Normalize();
-
-            if (Physics.Raycast(Weapon_FrontPoint.position, dir, out _newHit, _maxDistance, layerMask))
-            {
-                // Show line from WEAPON BARREL to hit point
-                Debug.DrawLine(Weapon_FrontPoint.transform.position, _newHit.point, Color.red, 0.1f);
-
-                objectHit = true;
-            }
-        }
-        else
-        {
-            // Show line from WEAPON BARREL to hit point
-            Debug.DrawLine(Weapon_FrontPoint.transform.position, _newHit.point, Color.red, 0.1f);
-
-            // Otherwise, apply impact at _hit.point & fire 'blank'
-            objectHit = true;
-        }
-        */
 
         _newHit = _hit;
         return objectHit;

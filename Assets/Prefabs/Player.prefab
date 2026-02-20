@@ -215,9 +215,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WEAPON_Fists
   _projectileType: 0
-  _damagePerProjectile: 1
+  _damagePerProjectile: 100
   _numProjectiles: 1
-  _shotsPerSecond: 1
+  _shotsPerSecond: 0.2
   _projectileObject: {fileID: 0}
 --- !u!114 &8696472406699709276
 MonoBehaviour:
@@ -232,7 +232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapon_Pistol
   _projectileType: 1
-  _damagePerProjectile: 1
+  _damagePerProjectile: 20
   _numProjectiles: 1
   _shotsPerSecond: 1
   _projectileObject: {fileID: 0}
@@ -249,8 +249,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapon_Shotgun
   _projectileType: 1
-  _damagePerProjectile: 1
-  _numProjectiles: 1
+  _damagePerProjectile: 3
+  _numProjectiles: 8
   _shotsPerSecond: 1
   _projectileObject: {fileID: 0}
 --- !u!1 &3890547124208464392

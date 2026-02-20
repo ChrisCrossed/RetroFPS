@@ -61,6 +61,18 @@ class #SCRIPTNAME# : WEAPON_OBJ
 
     }
 
+    // Draw Weapon function
+    public virtual void DrawWeapon()
+    {
+
+    }
+
+    // Holster Weapon function
+    public virtual void HolsterWeapon()
+    {
+
+    }
+
     #endregion Weapon Actions
 
     protected virtual void Update()
