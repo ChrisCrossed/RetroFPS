@@ -94,10 +94,8 @@ class WEAPON_OBJ : MonoBehaviour
     #region Weapon Actions
 
     private protected bool TriggerPulled;
-    public virtual void PullWeaponTrigger( RaycastHit _cameraRaycastHitObject )
+    public virtual void PullWeaponTrigger()
     {
-        CameraRaycastHitObject = _cameraRaycastHitObject;
-
         TriggerPulled = true;
     }
 
@@ -117,17 +115,43 @@ class WEAPON_OBJ : MonoBehaviour
 
     protected virtual bool GetAimedAtObject( out RaycastHit _newHit, float _maxDistance = 1000f)
     {
+        print("Back: " + Weapon_BackPoint.position);
+        print("Front: " + Weapon_FrontPoint.position);
+
         RaycastHit _hit = new RaycastHit();
         bool objectHit = false;
         layerMask = LayerMask.GetMask("Geo", "GameObject");
 
-        Vector3 dir = Weapon_BackPoint.position - Weapon_FrontPoint.position;
-        dir.Normalize();
+        Vector3 cameraDir = CameraObject.transform.forward;
+        Vector3 weaponDir = Weapon_FrontPoint.position - Weapon_BackPoint.position;
+        weaponDir.Normalize();
         float weaponBarrelLength = Vector3.Distance(Weapon_BackPoint.position, Weapon_FrontPoint.position);
 
-        Physics.Raycast(Weapon_BackPoint.position, dir, out _hit, weaponBarrelLength + 0.05f, layerMask);
+        Debug.DrawRay(CameraObject.transform.position, cameraDir * 10f, Color.aliceBlue, 0.1f);
+        
+        // Cast from Camera forward to find a valid game object
+        if(Physics.Raycast(CameraObject.transform.position, cameraDir, out _hit, _maxDistance + 0.05f, layerMask))
+        {
+            Vector3 hitPointDir = _hit.point - Weapon_FrontPoint.position;
+            hitPointDir.Normalize();
 
-        Debug.DrawLine(CameraObject.transform.position, _hit.point, Color.yellow, 0.1f);
+            float weapDist = Vector3.Distance(Weapon_BackPoint.position, _hit.point);
+
+            if (Physics.Raycast(Weapon_FrontPoint.position, hitPointDir, out _hit, weapDist + 0.05f, layerMask))
+            {
+                Debug.DrawRay(Weapon_FrontPoint.transform.position, hitPointDir * weapDist, Color.blue, 0.1f);
+
+                print("Hit: " + _hit.transform.position);
+                print("---");
+
+                objectHit = true;
+            }
+            
+        }
+
+        
+
+        // Debug.DrawLine(CameraObject.transform.position, _hit.point, Color.yellow, 0.1f);
 
         /*
         // RaycastHit _hit = new RaycastHit();

@@ -94,7 +94,7 @@ public class c_PlayerWeaponLogic : MonoBehaviour
 
         if (AttackPressed && !AttackPressed_OLD)
         {
-            currWeap.PullWeaponTrigger(CameraRaycastHitObject);
+            currWeap.PullWeaponTrigger();
         }
         else if (!AttackPressed && AttackPressed_OLD)
         {
