@@ -1,3 +1,4 @@
+using Unity.IO.LowLevel.Unsafe;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -20,6 +21,8 @@ public enum WeaponTypes
 
 class WEAPON_OBJ : MonoBehaviour
 {
+    protected float FireRateTimer = 0f;
+
     #region Init / Connections
 
     private protected GameObject CameraObject;
@@ -158,6 +161,38 @@ class WEAPON_OBJ : MonoBehaviour
 
         _newHit = _hit;
         return objectHit;
+    }
+
+    protected virtual void UPDATE_WeaponAutoFireLoop()
+    {
+        bool canFire = false;
+
+        if (TriggerPulled && FireRateTimer == 0f)
+        {
+            FireRateTimer = FireRate();
+
+            canFire = true;
+        }
+        else if (FireRateTimer > 0f)
+        {
+            FireRateTimer -= Time.deltaTime;
+
+            if (FireRateTimer < 0f) FireRateTimer = 0f;
+        }
+
+        // if (TriggerPulled && canFire)
+        if (canFire)
+        {
+            #region Raycast Check & Apply Damage
+            RaycastHit _hit;
+
+            if (GetAimedAtObject(out _hit))
+            {
+                print("Hit: " + _hit.transform.name + " for " + (DamagePerProjectile() * NumProjectiles() + " damage."));
+            }
+            else print("EMPTY");
+        }
+        #endregion Raycast Check & Apply Damage
     }
 
     #endregion Weapon Actions
