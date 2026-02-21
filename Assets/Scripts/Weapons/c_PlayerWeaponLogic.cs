@@ -72,7 +72,6 @@ public class c_PlayerWeaponLogic : MonoBehaviour
 
     // Used for Weapon Fire & various interactions (Use)
     bool AttackPressed_OLD;
-    RaycastHit CameraRaycastHitObject;
     GameObject CurrentWeapon;
     void LATEUPDATE_PlayerInteract()
     {
@@ -85,9 +84,7 @@ public class c_PlayerWeaponLogic : MonoBehaviour
 
         if (Physics.Raycast(CameraObject.transform.position, CameraObject.transform.forward, out _hit, 1000f, layerMask))
         {
-            CameraRaycastHitObject = _hit;
-
-            CursorRaycastOptions(_hit);
+            // CursorRaycastOptions(_hit);
         }
 
         #endregion Camera Raycast
