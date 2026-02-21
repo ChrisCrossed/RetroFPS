@@ -40,10 +40,20 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         weapon_Pistol = gameObject.GetComponent<Weapon_Pistol>();
         weapon_Shotgun = gameObject.GetComponent<Weapon_Shotgun>();
         weapon_Fists = gameObject.GetComponent<Weapon_Fists>();
+
+        IA_CycleWeapon_1 = InputSystem.actions.FindAction("CycleWeapon1");
+        IA_CycleWeapon_2 = InputSystem.actions.FindAction("CycleWeapon2");
+        IA_CycleWeapon_3 = InputSystem.actions.FindAction("CycleWeapon3");
+        IA_CycleWeapon_4 = InputSystem.actions.FindAction("CycleWeapon4");
     }
 
+    WeaponTypes CurrentlyAssignedWeapon;
     void AssignNewWeapon(WeaponTypes _weaponType)
     {
+        if (CurrentlyAssignedWeapon == _weaponType) return;
+
+        CurrentlyAssignedWeapon = _weaponType;
+
         switch (_weaponType)
         {
             case WeaponTypes.Fists:
@@ -64,10 +74,49 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         currWeap.ApplyWeaponObjects(CurrentWeapon);
     }
 
+    bool CycleWeapon1_ButtonState;
+    bool CycleWeapon2_ButtonState;
+    bool CycleWeapon3_ButtonState;
+    bool CycleWeapon4_ButtonState;
+    InputAction IA_CycleWeapon_1;
+    InputAction IA_CycleWeapon_2;
+    InputAction IA_CycleWeapon_3;
+    InputAction IA_CycleWeapon_4;
+    void LATEUPDATE_WeaponSwitchLogic()
+    {
+        #region Check How Many Buttons are Being Held
+        int numButtonsPressed = 0;
+        if (IA_CycleWeapon_1.IsPressed()) numButtonsPressed++;
+        if (IA_CycleWeapon_2.IsPressed()) numButtonsPressed++;
+        if (IA_CycleWeapon_3.IsPressed()) numButtonsPressed++;
+        if (IA_CycleWeapon_4.IsPressed()) numButtonsPressed++;
+
+        if (numButtonsPressed > 1) return;
+        #endregion Check How Many Buttons are Being Held
+
+        #region Switch Weapons
+        if (IA_CycleWeapon_1.IsPressed() && !CycleWeapon1_ButtonState)
+        {
+            AssignNewWeapon(WeaponTypes.Pistol);
+            print("Pistol");
+        }
+        else if(IA_CycleWeapon_2.IsPressed() && !CycleWeapon2_ButtonState)
+        {
+            AssignNewWeapon(WeaponTypes.Shotgun);
+            print("Shotgun");
+        }
+
+        CycleWeapon1_ButtonState = IA_CycleWeapon_1.IsPressed();
+        CycleWeapon2_ButtonState = IA_CycleWeapon_2.IsPressed();
+        #endregion Switch Weapons
+    }
+
     // Update is called once per frame
     void LateUpdate()
     {
         LATEUPDATE_PlayerInteract();
+
+        LATEUPDATE_WeaponSwitchLogic();
     }
 
     // Used for Weapon Fire & various interactions (Use)
