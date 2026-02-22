@@ -51,6 +51,6 @@ class Weapon_Shotgun : WEAPON_OBJ
 
     protected override void Update()
     {
-
+        UPDATE_WeaponAutoFireLoop();
     }
 }

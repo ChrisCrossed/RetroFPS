@@ -4,6 +4,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
+
+public enum InputType
+{
+    KeyboardMouse,
+    Controller,
+    None
+}
 
 public class c_PlayerController : MonoBehaviour
 {
@@ -11,6 +19,11 @@ public class c_PlayerController : MonoBehaviour
     CharacterController PlayerController;
     GameObject CameraObject;
 
+    public InputType InputType
+    {
+        private set { InputType = value;}
+        get { return InputType; }
+    }
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -22,6 +35,8 @@ public class c_PlayerController : MonoBehaviour
 
     void START_Connections()
     {
+        // InputType = InputType.KeyboardMouse;
+
         IA_Move = InputSystem.actions.FindAction("Move");
         IA_Look = InputSystem.actions.FindAction("Look");
         IA_PrimaryAttack = InputSystem.actions.FindAction("Attack");

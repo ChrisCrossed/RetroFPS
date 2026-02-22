@@ -3,10 +3,24 @@ using UnityEngine.InputSystem;
 
 public class c_PlayerWeaponLogic : MonoBehaviour
 {
+    InputType InputType = InputType.None;
+
     GameObject CameraObject;
 
     InputAction IA_PrimaryAttack;
     bool AttackPressed;
+
+    InputAction IA_CycleWeapon_1;
+    InputAction IA_CycleWeapon_2;
+    InputAction IA_CycleWeapon_3;
+    InputAction IA_CycleWeapon_4;
+    bool CycleWeapon1_ButtonState;
+    bool CycleWeapon2_ButtonState;
+    bool CycleWeapon3_ButtonState;
+    bool CycleWeapon4_ButtonState;
+
+    InputAction IA_Controller_CycleWeapon_Next;
+    InputAction IA_Controller_CycleWeapon_Previous;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -18,17 +32,35 @@ public class c_PlayerWeaponLogic : MonoBehaviour
 
     void START_Connections()
     {
-        IA_PrimaryAttack = InputSystem.actions.FindAction("Attack");
+        #region Controller Connections
+        IA_Controller_CycleWeapon_Next = InputSystem.actions.FindAction("CycleWeapon_Next");
+        IA_Controller_CycleWeapon_Previous = InputSystem.actions.FindAction("CycleWeapon_Previous");
+        #endregion Controller Connections
 
+        #region Keyboard Mouse Connections
+        IA_CycleWeapon_1 = InputSystem.actions.FindAction("CycleWeapon1");
+        IA_CycleWeapon_2 = InputSystem.actions.FindAction("CycleWeapon2");
+        IA_CycleWeapon_3 = InputSystem.actions.FindAction("CycleWeapon3");
+        IA_CycleWeapon_4 = InputSystem.actions.FindAction("CycleWeapon4");
+        #endregion Keyboard Mouse Connections
+
+        #region Global Input Connections
+        IA_PrimaryAttack = InputSystem.actions.FindAction("Attack");
+        #endregion Global Input Connections
+
+        #region Game Object Connections
         CameraObject = gameObject.transform.parent.Find("Main Camera").gameObject;
 
         CurrentWeapon = gameObject.transform.parent.Find("WeaponCamera").transform.Find("WeaponSystem").transform.Find("Weapon_Pistol").gameObject;
 
         LastViewedObject = null;
+        #endregion Game Object Connections
 
         Init_WeaponTypes();
 
         AssignNewWeapon(WeaponTypes.Pistol);
+
+        GetInputType();
     }
 
     WEAPON_OBJ currWeap;
@@ -40,11 +72,16 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         weapon_Pistol = gameObject.GetComponent<Weapon_Pistol>();
         weapon_Shotgun = gameObject.GetComponent<Weapon_Shotgun>();
         weapon_Fists = gameObject.GetComponent<Weapon_Fists>();
+    }
 
-        IA_CycleWeapon_1 = InputSystem.actions.FindAction("CycleWeapon1");
-        IA_CycleWeapon_2 = InputSystem.actions.FindAction("CycleWeapon2");
-        IA_CycleWeapon_3 = InputSystem.actions.FindAction("CycleWeapon3");
-        IA_CycleWeapon_4 = InputSystem.actions.FindAction("CycleWeapon4");
+    void GetInputType()
+    {
+        InputType = InputType.KeyboardMouse;
+
+        /*
+        InputType = gameObject.GetComponent<c_PlayerController>().InputType;
+        print("Input Type: " + InputType);
+        */
     }
 
     WeaponTypes CurrentlyAssignedWeapon;
@@ -74,15 +111,24 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         currWeap.ApplyWeaponObjects(CurrentWeapon);
     }
 
-    bool CycleWeapon1_ButtonState;
-    bool CycleWeapon2_ButtonState;
-    bool CycleWeapon3_ButtonState;
-    bool CycleWeapon4_ButtonState;
-    InputAction IA_CycleWeapon_1;
-    InputAction IA_CycleWeapon_2;
-    InputAction IA_CycleWeapon_3;
-    InputAction IA_CycleWeapon_4;
+    
     void LATEUPDATE_WeaponSwitchLogic()
+    {
+        switch (InputType)  
+        {
+            case InputType.Controller:
+                WeaponSwitchLogic_Controller();
+                break;
+            case InputType.None:
+                break;
+            case InputType.KeyboardMouse:
+            default:
+                WeaponSwitchLogic_KeyboardMouse();
+                break;
+        }
+    }
+
+    void WeaponSwitchLogic_KeyboardMouse()
     {
         #region Check How Many Buttons are Being Held
         int numButtonsPressed = 0;
@@ -100,7 +146,7 @@ public class c_PlayerWeaponLogic : MonoBehaviour
             AssignNewWeapon(WeaponTypes.Pistol);
             print("Pistol");
         }
-        else if(IA_CycleWeapon_2.IsPressed() && !CycleWeapon2_ButtonState)
+        else if (IA_CycleWeapon_2.IsPressed() && !CycleWeapon2_ButtonState)
         {
             AssignNewWeapon(WeaponTypes.Shotgun);
             print("Shotgun");
@@ -109,6 +155,11 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         CycleWeapon1_ButtonState = IA_CycleWeapon_1.IsPressed();
         CycleWeapon2_ButtonState = IA_CycleWeapon_2.IsPressed();
         #endregion Switch Weapons
+    }
+
+    void WeaponSwitchLogic_Controller()
+    {
+
     }
 
     // Update is called once per frame
