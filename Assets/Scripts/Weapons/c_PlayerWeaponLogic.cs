@@ -51,7 +51,7 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         #region Game Object Connections
         CameraObject = gameObject.transform.parent.Find("Main Camera").gameObject;
 
-        CurrentWeapon = gameObject.transform.parent.Find("WeaponCamera").transform.Find("WeaponSystem").transform.Find("Weapon_Pistol").gameObject;
+        
 
         LastViewedObject = null;
         #endregion Game Object Connections
@@ -63,6 +63,12 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         GetInputType();
     }
 
+    GameObject CurrentWeapon;
+    GameObject WeaponObject_Parent;
+    GameObject WeaponObject_Pistol;
+    GameObject WeaponObject_Shotgun;
+    GameObject WeaponObject_Fists;
+    GameObject WeaponObject_Spear;
     WEAPON_OBJ currWeap;
     Weapon_Pistol weapon_Pistol;
     Weapon_Shotgun weapon_Shotgun;
@@ -72,6 +78,13 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         weapon_Pistol = gameObject.GetComponent<Weapon_Pistol>();
         weapon_Shotgun = gameObject.GetComponent<Weapon_Shotgun>();
         weapon_Fists = gameObject.GetComponent<Weapon_Fists>();
+        // weapon_Spear = gameObject.GetComponent<Weapon_Spear>();
+
+        WeaponObject_Parent = gameObject.transform.parent.Find("WeaponCamera").transform.Find("WeaponSystem").gameObject;
+        WeaponObject_Pistol = WeaponObject_Parent.transform.Find("Weapon_Pistol").gameObject;
+        WeaponObject_Shotgun = WeaponObject_Parent.transform.Find("Weapon_Shotgun").gameObject;
+        WeaponObject_Fists = WeaponObject_Parent.transform.Find("Weapon_Fists").gameObject;
+        WeaponObject_Spear = WeaponObject_Parent.transform.Find("Weapon_Spear").gameObject;
     }
 
     void GetInputType()
@@ -95,18 +108,28 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         {
             case WeaponTypes.Fists:
                 currWeap = weapon_Fists;
+                CurrentWeapon = WeaponObject_Fists;
                 break;
             case WeaponTypes.Spear:
+                // currWeap = weapon_Spear;
+                CurrentWeapon = WeaponObject_Spear;
                 break;
             case WeaponTypes.Pistol:
                 currWeap = weapon_Pistol;
+                CurrentWeapon = WeaponObject_Pistol;
                 break;
             case WeaponTypes.Shotgun:
                 currWeap = weapon_Shotgun;
+                CurrentWeapon = WeaponObject_Shotgun;
                 break;
             default:
                 break;
         }
+
+        WeaponObject_Spear.SetActive(_weaponType == WeaponTypes.Spear);
+        WeaponObject_Fists.SetActive(_weaponType == WeaponTypes.Fists);
+        WeaponObject_Pistol.SetActive(_weaponType == WeaponTypes.Pistol);
+        WeaponObject_Shotgun.SetActive(_weaponType == WeaponTypes.Shotgun);
 
         currWeap.ApplyWeaponObjects(CurrentWeapon);
     }
@@ -172,7 +195,7 @@ public class c_PlayerWeaponLogic : MonoBehaviour
 
     // Used for Weapon Fire & various interactions (Use)
     bool AttackPressed_OLD;
-    GameObject CurrentWeapon;
+    
     void LATEUPDATE_PlayerInteract()
     {
         AttackPressed = IA_PrimaryAttack.IsPressed();
