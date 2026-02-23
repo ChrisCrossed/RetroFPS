@@ -42,7 +42,12 @@ class WEAPON_OBJ : MonoBehaviour
     {
         CameraObject = gameObject.transform.parent.Find("Main Camera").gameObject;
 
-        
+        SetWeaponTransforms();
+    }
+
+    private protected virtual void SetWeaponTransforms()
+    {
+
     }
 
     public virtual void ApplyWeaponObjects(GameObject _currentWeapon)
@@ -113,15 +118,15 @@ class WEAPON_OBJ : MonoBehaviour
     }
 
     // Draw Weapon function
-    public virtual void DrawWeapon()
+    public virtual float DrawWeapon()
     {
-
+        return -1f;
     }
 
     // Holster Weapon function
-    public virtual void HolsterWeapon()
+    public virtual float HolsterWeapon()
     {
-
+        return -1f;
     }
 
     protected virtual bool GetAimedAtObject( out RaycastHit _newHit, float _maxDistance = 1000f)

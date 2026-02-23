@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -132,6 +133,8 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         WeaponObject_Shotgun.SetActive(_weaponType == WeaponTypes.Shotgun);
 
         currWeap.ApplyWeaponObjects(CurrentWeapon);
+
+        print(currWeap.DrawWeapon());
     }
 
     
@@ -178,6 +181,17 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         CycleWeapon1_ButtonState = IA_CycleWeapon_1.IsPressed();
         CycleWeapon2_ButtonState = IA_CycleWeapon_2.IsPressed();
         #endregion Switch Weapons
+    }
+
+    IEnumerator ChangeWeaponThread()
+    {
+        // Get 'Holster Weapon' timer for current weapon's animation
+
+        yield return new WaitForSeconds(1.0f);
+
+        // Get 'Draw Weapon' timer for next weapon's animation
+
+        yield return null;
     }
 
     void WeaponSwitchLogic_Controller()
