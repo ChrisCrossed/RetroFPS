@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 class Weapon_Shotgun : WEAPON_OBJ
@@ -45,6 +46,34 @@ class Weapon_Shotgun : WEAPON_OBJ
     public override void ReloadWeapon()
     {
         base.ReloadWeapon();
+    }
+
+    float DrawWeaponTime = 0.1f;
+    public override float DrawWeapon()
+    {
+        // This is intended to get the animation for the weapon and play it.
+        // This might not be the right way to go about this in the future.
+        // StartCoroutine(DrawWeaponAnimation());
+
+        return DrawWeaponTime;
+    }
+
+    private IEnumerator DrawWeaponAnimation()
+    {
+        yield return null;
+    }
+
+    float HolsterWeaponTime = 0.1f;
+    public override float HolsterWeapon()
+    {
+        // StartCoroutine(HolsterWeaponAnimation());
+
+        return HolsterWeaponTime;
+    }
+
+    private IEnumerator HolsterWeaponAnimation()
+    {
+        yield return null;
     }
 
     #endregion Weapon Actions

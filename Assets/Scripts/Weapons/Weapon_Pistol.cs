@@ -5,8 +5,7 @@ class Weapon_Pistol : WEAPON_OBJ
 {
     private protected override void SetWeaponTransforms()
     {
-        // base.SetWeaponTransforms();
-        // WeaponReadyPosition = gameObject.
+        base.SetWeaponTransforms();
     }
 
     #region Weapon Stats
@@ -55,11 +54,11 @@ class Weapon_Pistol : WEAPON_OBJ
     }
 
     float DrawWeaponTime = 0.1f;
-    Transform WeaponReadyPosition;
-    Transform WeaponHolsterPosition;
     public override float DrawWeapon()
     {
-        StartCoroutine(DrawWeaponAnimation());
+        // This is intended to get the animation for the weapon and play it.
+        // This might not be the right way to go about this in the future.
+        // StartCoroutine(DrawWeaponAnimation());
 
         return DrawWeaponTime;
     }
@@ -72,9 +71,9 @@ class Weapon_Pistol : WEAPON_OBJ
     float HolsterWeaponTime = 0.1f;
     public override float HolsterWeapon()
     {
-        StartCoroutine(HolsterWeaponAnimation());
+        //StartCoroutine(HolsterWeaponAnimation());
 
-        return 0.1f;
+        return HolsterWeaponTime;
     }
 
     private IEnumerator HolsterWeaponAnimation()

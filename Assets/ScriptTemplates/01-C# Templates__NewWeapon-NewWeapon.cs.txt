@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 class #SCRIPTNAME# : WEAPON_OBJ
@@ -61,16 +62,32 @@ class #SCRIPTNAME# : WEAPON_OBJ
 
     }
 
-    // Draw Weapon function
-    public virtual void DrawWeapon()
+    float DrawWeaponTime = 0.1f;
+    public override float DrawWeapon()
     {
+        // This is intended to get the animation for the weapon and play it.
+        // This might not be the right way to go about this in the future.
+        StartCoroutine(DrawWeaponAnimation());
 
+        return DrawWeaponTime;
     }
 
-    // Holster Weapon function
-    public virtual void HolsterWeapon()
+    private IEnumerator DrawWeaponAnimation()
     {
+        yield return null;
+    }
 
+    float HolsterWeaponTime = 0.1f;
+    public override float HolsterWeapon()
+    {
+        StartCoroutine(HolsterWeaponAnimation());
+
+        return HolsterWeaponTime;
+    }
+
+    private IEnumerator HolsterWeaponAnimation()
+    {
+        yield return null;
     }
 
     #endregion Weapon Actions
