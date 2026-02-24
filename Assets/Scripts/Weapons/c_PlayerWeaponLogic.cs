@@ -105,6 +105,10 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         CurrentlyAssignedWeapon = _weaponType;
 
         WEAPON_OBJ prevWeap = currWeap;
+        if(currWeap != null)
+        {
+            currWeap.ReleaseWeaponTrigger();
+        }
 
         switch (_weaponType)
         {
@@ -251,21 +255,28 @@ public class c_PlayerWeaponLogic : MonoBehaviour
     
     void LATEUPDATE_PlayerInteract()
     {
-        // TODO: Ensure if weapon is being switched, DO NOT allow gunfire
-        AttackPressed = IA_PrimaryAttack.IsPressed();
-
-        #region Camera Raycast
-
-        RaycastHit _hit;
-        int layerMask = LayerMask.GetMask("Geo", "GameObject");
-
-        if (Physics.Raycast(CameraObject.transform.position, CameraObject.transform.forward, out _hit, 1000f, layerMask))
+        if(WeaponCurrentlySwitching)
         {
-            // CursorRaycastOptions(_hit);
+            AttackPressed = false;
+            AttackPressed_OLD = false;
         }
+        else
+        {
+            // TODO: Ensure if weapon is being switched, DO NOT allow gunfire
+            AttackPressed = IA_PrimaryAttack.IsPressed();
 
-        #endregion Camera Raycast
+            #region Camera Raycast
 
+            RaycastHit _hit;
+            int layerMask = LayerMask.GetMask("Geo", "GameObject");
+
+            if (Physics.Raycast(CameraObject.transform.position, CameraObject.transform.forward, out _hit, 1000f, layerMask))
+            {
+                // CursorRaycastOptions(_hit);
+            }
+            #endregion Camera Raycast
+        }
+            
         if (AttackPressed && !AttackPressed_OLD)
         {
             currWeap.PullWeaponTrigger();
