@@ -48,7 +48,7 @@ class Weapon_Shotgun : WEAPON_OBJ
         base.ReloadWeapon();
     }
 
-    float DrawWeaponTime = 0.1f;
+    float DrawWeaponTime = 0.3f;
     public override float DrawWeapon()
     {
         // This is intended to get the animation for the weapon and play it.
@@ -63,7 +63,7 @@ class Weapon_Shotgun : WEAPON_OBJ
         yield return null;
     }
 
-    float HolsterWeaponTime = 0.1f;
+    float HolsterWeaponTime = 0.3f;
     public override float HolsterWeapon()
     {
         // StartCoroutine(HolsterWeaponAnimation());

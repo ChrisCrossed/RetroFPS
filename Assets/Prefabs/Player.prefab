@@ -268,7 +268,7 @@ MonoBehaviour:
   _projectileType: 1
   _damagePerProjectile: 20
   _numProjectiles: 1
-  _shotsPerSecond: 1
+  _shotsPerSecond: 0.4
   _projectileObject: {fileID: 0}
 --- !u!114 &4215854899767533920
 MonoBehaviour:
@@ -284,8 +284,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Weapon_Shotgun
   _projectileType: 1
   _damagePerProjectile: 3
-  _numProjectiles: 8
-  _shotsPerSecond: 1
+  _numProjectiles: 7
+  _shotsPerSecond: 0.95
   _projectileObject: {fileID: 0}
 --- !u!1 &3653868724193263587
 GameObject:
