@@ -58,6 +58,7 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         Init_WeaponTypes();
 
         AssignNewWeapon(WeaponTypes.Pistol);
+        SetWeaponActiveModel(WeaponTypes.Pistol);
 
         GetInputType();
     }
@@ -134,17 +135,14 @@ public class c_PlayerWeaponLogic : MonoBehaviour
 
         if (prevWeap != null)
         {
-            StartCoroutine(ChangeWeaponThread(prevWeap, currWeap));
+            StartCoroutine(ChangeWeaponThread(prevWeap, currWeap, _weaponType));
         }
 
-        WeaponObject_Spear.SetActive(_weaponType == WeaponTypes.Spear);
-        WeaponObject_Fists.SetActive(_weaponType == WeaponTypes.Fists);
-        WeaponObject_Pistol.SetActive(_weaponType == WeaponTypes.Pistol);
-        WeaponObject_Shotgun.SetActive(_weaponType == WeaponTypes.Shotgun);
+        
 
         currWeap.ApplyWeaponObjects(CurrentWeapon);
 
-        print(currWeap.DrawWeapon());
+        // print(currWeap.DrawWeapon());
     }
 
     
@@ -194,12 +192,12 @@ public class c_PlayerWeaponLogic : MonoBehaviour
     }
 
     bool WeaponCurrentlySwitching;
-    IEnumerator ChangeWeaponThread(WEAPON_OBJ _prevWeap, WEAPON_OBJ _nextWeap)
+    IEnumerator ChangeWeaponThread(WEAPON_OBJ _prevWeapObj, WEAPON_OBJ _nextWeapObj, WeaponTypes _nextWeapType)
     {
         WeaponCurrentlySwitching = true;
 
         // Get 'Holster Weapon' timer for current weapon's animation
-        float holsterTimerMax = _prevWeap.HolsterWeapon();
+        float holsterTimerMax = _prevWeapObj.HolsterWeapon();
         
         float timer = 0f;
 
@@ -210,15 +208,16 @@ public class c_PlayerWeaponLogic : MonoBehaviour
             timer += Time.deltaTime;
 
             angle = Mathf.Lerp(0f, 60f, timer /  holsterTimerMax);
-            print("DOWN: " + timer + " (" + angle + ")");
             WeaponObject_Parent.transform.localEulerAngles = new Vector3 (angle, 0f, 0f);
 
             yield return new WaitForEndOfFrame();
         }
 
-        print("---");
+        // print("---");
 
-        holsterTimerMax = _nextWeap.DrawWeapon();
+        SetWeaponActiveModel(_nextWeapType);
+
+        holsterTimerMax = _nextWeapObj.DrawWeapon();
         timer = holsterTimerMax;
 
         while (timer > 0f)
@@ -226,7 +225,6 @@ public class c_PlayerWeaponLogic : MonoBehaviour
             timer -= Time.deltaTime;
 
             angle = Mathf.Lerp(0f, 60f, timer / holsterTimerMax);
-            print("UP: " + timer + " (" + angle + ")");
             WeaponObject_Parent.transform.localEulerAngles = new Vector3(angle, 0f, 0f);
 
             yield return new WaitForEndOfFrame();
@@ -235,6 +233,14 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         WeaponCurrentlySwitching = false;
 
         yield return null;
+    }
+
+    void SetWeaponActiveModel(WeaponTypes _currWeap)
+    {
+        WeaponObject_Spear.SetActive(_currWeap == WeaponTypes.Spear);
+        WeaponObject_Fists.SetActive(_currWeap == WeaponTypes.Fists);
+        WeaponObject_Pistol.SetActive(_currWeap == WeaponTypes.Pistol);
+        WeaponObject_Shotgun.SetActive(_currWeap == WeaponTypes.Shotgun);
     }
 
     void WeaponSwitchLogic_Controller()
