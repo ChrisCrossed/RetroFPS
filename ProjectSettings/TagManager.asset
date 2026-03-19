@@ -9,6 +9,7 @@ TagManager:
   - Wall
   - ElevatorButton
   - WeaponCamera
+  - LazerGunBall
   layers:
   - Default
   - TransparentFX
