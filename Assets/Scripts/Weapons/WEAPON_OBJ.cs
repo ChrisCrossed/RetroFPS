@@ -15,7 +15,8 @@ public enum WeaponTypes
     Fists,
     Spear,
     Pistol,
-    Shotgun
+    Shotgun,
+    LazerGun,
 }
 
 

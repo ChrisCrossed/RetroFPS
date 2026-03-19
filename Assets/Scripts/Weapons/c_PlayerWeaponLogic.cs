@@ -67,22 +67,26 @@ public class c_PlayerWeaponLogic : MonoBehaviour
     GameObject WeaponObject_Parent;
     GameObject WeaponObject_Pistol;
     GameObject WeaponObject_Shotgun;
+    GameObject WeaponObject_LazerGun;
     GameObject WeaponObject_Fists;
     GameObject WeaponObject_Spear;
     WEAPON_OBJ currWeap;
     Weapon_Pistol weapon_Pistol;
     Weapon_Shotgun weapon_Shotgun;
+    Weapon_LazerGun weapon_LazerGun;
     Weapon_Fists weapon_Fists;
     void Init_WeaponTypes()
     {
         weapon_Pistol = gameObject.GetComponent<Weapon_Pistol>();
         weapon_Shotgun = gameObject.GetComponent<Weapon_Shotgun>();
         weapon_Fists = gameObject.GetComponent<Weapon_Fists>();
+        weapon_LazerGun = gameObject.GetComponent<Weapon_LazerGun>();
         // weapon_Spear = gameObject.GetComponent<Weapon_Spear>();
 
         WeaponObject_Parent = gameObject.transform.parent.Find("WeaponCamera").transform.Find("WeaponSystem").gameObject;
         WeaponObject_Pistol = WeaponObject_Parent.transform.Find("Weapon_Pistol").gameObject;
         WeaponObject_Shotgun = WeaponObject_Parent.transform.Find("Weapon_Shotgun").gameObject;
+        WeaponObject_LazerGun = WeaponObject_Parent.transform.Find("Weapon_LazerGun").gameObject;
         WeaponObject_Fists = WeaponObject_Parent.transform.Find("Weapon_Fists").gameObject;
         WeaponObject_Spear = WeaponObject_Parent.transform.Find("Weapon_Spear").gameObject;
     }
@@ -126,6 +130,10 @@ public class c_PlayerWeaponLogic : MonoBehaviour
                 CurrentWeapon = WeaponObject_Pistol;
                 break;
             case WeaponTypes.Shotgun:
+                currWeap = weapon_Shotgun;
+                CurrentWeapon = WeaponObject_Shotgun;
+                break;
+            case WeaponTypes.LazerGun:
                 currWeap = weapon_Shotgun;
                 CurrentWeapon = WeaponObject_Shotgun;
                 break;
@@ -185,9 +193,15 @@ public class c_PlayerWeaponLogic : MonoBehaviour
             AssignNewWeapon(WeaponTypes.Shotgun);
             print("Shotgun");
         }
+        else if (IA_CycleWeapon_3.IsPressed() && !CycleWeapon3_ButtonState)
+        {
+            AssignNewWeapon(WeaponTypes.LazerGun);
+            print("Lazer Gun");
+        }
 
         CycleWeapon1_ButtonState = IA_CycleWeapon_1.IsPressed();
         CycleWeapon2_ButtonState = IA_CycleWeapon_2.IsPressed();
+        CycleWeapon3_ButtonState = IA_CycleWeapon_3.IsPressed();
         #endregion Switch Weapons
     }
 
@@ -241,6 +255,7 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         WeaponObject_Fists.SetActive(_currWeap == WeaponTypes.Fists);
         WeaponObject_Pistol.SetActive(_currWeap == WeaponTypes.Pistol);
         WeaponObject_Shotgun.SetActive(_currWeap == WeaponTypes.Shotgun);
+        WeaponObject_LazerGun.SetActive(_currWeap == WeaponTypes.LazerGun);
     }
 
     void WeaponSwitchLogic_Controller()
