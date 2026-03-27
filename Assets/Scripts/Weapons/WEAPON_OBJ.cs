@@ -108,9 +108,20 @@ class WEAPON_OBJ : MonoBehaviour
         TriggerPulled = true;
     }
 
+    private protected bool TriggerSecondaryPulled;
+    public virtual void PullSecondaryWeaponTrigger()
+    {
+        TriggerSecondaryPulled = true;
+    }
+
     public virtual void ReleaseWeaponTrigger()
     {
         TriggerPulled = false;
+    }
+
+    public virtual void ReleaseSecondaryWeaponTrigger()
+    {
+        TriggerSecondaryPulled = false;
     }
 
     public virtual void ReloadWeapon()

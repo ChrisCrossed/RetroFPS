@@ -81,7 +81,9 @@ public class c_PlayerController : MonoBehaviour
     [SerializeField] float VerticalLookMultiplier = 5f;
 
     InputAction IA_PrimaryAttack;
+    InputAction IA_SecondaryAttack;
     bool AttackPressed;
+    bool SecondaryAttackPressed;
 
     void UPDATE_GetPlayerInput()
     {
@@ -91,6 +93,7 @@ public class c_PlayerController : MonoBehaviour
         v2_MouseInput = IA_Look.ReadValue<Vector2>();
 
         AttackPressed = IA_PrimaryAttack.IsPressed();
+        SecondaryAttackPressed = IA_SecondaryAttack.IsPressed();
     }
 
     float CameraAngle = 0f;

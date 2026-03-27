@@ -9,7 +9,9 @@ public class c_PlayerWeaponLogic : MonoBehaviour
     GameObject CameraObject;
 
     InputAction IA_PrimaryAttack;
+    InputAction IA_SecondaryAttack;
     bool AttackPressed;
+    bool AttackSecondaryPressed;
 
     InputAction IA_CycleWeapon_1;
     InputAction IA_CycleWeapon_2;
@@ -47,6 +49,7 @@ public class c_PlayerWeaponLogic : MonoBehaviour
 
         #region Global Input Connections
         IA_PrimaryAttack = InputSystem.actions.FindAction("Attack");
+        IA_SecondaryAttack = InputSystem.actions.FindAction("Attack_Secondary");
         #endregion Global Input Connections
 
         #region Game Object Connections
@@ -113,6 +116,7 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         if(currWeap != null)
         {
             currWeap.ReleaseWeaponTrigger();
+            currWeap.ReleaseSecondaryWeaponTrigger();
         }
 
         switch (_weaponType)
@@ -273,18 +277,23 @@ public class c_PlayerWeaponLogic : MonoBehaviour
 
     // Used for Weapon Fire & various interactions (Use)
     bool AttackPressed_OLD;
-    
+    bool AttackSecondaryPressed_OLD;
+
     void LATEUPDATE_PlayerInteract()
     {
         if(WeaponCurrentlySwitching)
         {
             AttackPressed = false;
             AttackPressed_OLD = false;
+
+            AttackSecondaryPressed = false;
+            AttackSecondaryPressed_OLD = false;
         }
         else
         {
             // TODO: Ensure if weapon is being switched, DO NOT allow gunfire
             AttackPressed = IA_PrimaryAttack.IsPressed();
+            AttackSecondaryPressed = IA_SecondaryAttack.IsPressed();
 
             #region Camera Raycast
 
@@ -306,8 +315,18 @@ public class c_PlayerWeaponLogic : MonoBehaviour
         {
             currWeap.ReleaseWeaponTrigger();
         }
-        
+
+        if(AttackSecondaryPressed && !AttackSecondaryPressed_OLD)
+        {
+            currWeap.PullSecondaryWeaponTrigger();
+        }
+        else if(!AttackSecondaryPressed && AttackSecondaryPressed_OLD)
+        {
+            currWeap.ReleaseSecondaryWeaponTrigger();
+        }
+
         AttackPressed_OLD = AttackPressed;
+        AttackSecondaryPressed_OLD = AttackSecondaryPressed;
     }
 
     #region Gameplay Functions

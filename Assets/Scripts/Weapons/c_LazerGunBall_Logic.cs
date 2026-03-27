@@ -2,14 +2,33 @@ using UnityEngine;
 
 public class c_LazerGunBall_Logic : MonoBehaviour
 {
+    bool IsActive;
+    MeshRenderer _MeshRenderer;
+    SphereCollider _SphereCollider;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        _MeshRenderer = GetComponent<MeshRenderer>();
+        _SphereCollider = GetComponent<SphereCollider>();
+
+        SetBallState(false);
+
+        // Remove the LazerBall from being parented to the Player object now that we've started the game
+        gameObject.transform.parent = null;
     }
 
-    public void FireOrb()
+    void SetBallState(bool state)
     {
+        IsActive = state;
+        _MeshRenderer.enabled = state;
+        _SphereCollider.enabled = state;
+    }
+
+    public void FireOrb(Transform startingTransform)
+    {
+        IsActive = true;
+
         perc = 0f;
         PercDir = false;
 
@@ -17,21 +36,33 @@ public class c_LazerGunBall_Logic : MonoBehaviour
         WillExplode = false;
 
         // Set Transform Position to front of gun
+        print("Start Pos: " + startingTransform.position);
 
         // Set scale appropriately (And begin scaling up to max size)
+        gameObject.transform.localScale = new Vector3(1, 1, 1);
 
         // Enable Visibility if Disabled
+        SetBallState(true);
+    }
+
+    void DisperseLazers()
+    {
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        MovementUpdate();
-        MaterialUpdate();
+        if(IsActive)
+        {
+            MovementUpdate();
+            MaterialUpdate();
+        }
     }
 
     static float MoveSpeed_MAX = 3.0f;
-    static float MoveSpeed = 3.0f;
+    static float MoveSpeed_SLOW = 1.5f;
+    float MoveSpeed = 3.0f;
     void MovementUpdate()
     {
         gameObject.transform.position += gameObject.transform.forward * Time.deltaTime * MoveSpeed;
@@ -67,7 +98,7 @@ public class c_LazerGunBall_Logic : MonoBehaviour
     float ChargeUpPerc = 0f;
     float ChargeUpPerc_MaxTime = 1f;
     bool WillExplode = false;
-    public void ChargeOrb()
+    void ChargeOrb()
     {
         MoveSpeed = MoveSpeed_MAX * OrbChargeMoveSpeedMult;
 
@@ -80,4 +111,5 @@ public class c_LazerGunBall_Logic : MonoBehaviour
             if(ChargeUpPerc == 1f) WillExplode = true;
         }
     }
+
 }

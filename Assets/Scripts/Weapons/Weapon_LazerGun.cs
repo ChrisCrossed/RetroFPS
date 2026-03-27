@@ -34,7 +34,11 @@ class Weapon_LazerGun : WEAPON_OBJ
 
     #region Weapon Actions
 
-    private protected bool TriggerPulled;
+    public override void PullWeaponTrigger()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public virtual void PullWeaponTrigger( RaycastHit _cameraRaycastHitObject )
     {
         CameraRaycastHitObject = _cameraRaycastHitObject;
@@ -42,9 +46,26 @@ class Weapon_LazerGun : WEAPON_OBJ
         TriggerPulled = true;
     }
 
+    public override void PullSecondaryWeaponTrigger()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public virtual void PullSecondaryWeaponTrigger(RaycastHit _cameraRaycastHitObject)
+    {
+        TriggerSecondaryPulled = true;
+
+        CameraRaycastHitObject = _cameraRaycastHitObject;
+    }
+
     public override void ReleaseWeaponTrigger()
     {
         TriggerPulled = false;
+    }
+
+    public override void ReleaseSecondaryWeaponTrigger()
+    {
+        TriggerSecondaryPulled = false;
     }
 
     public override void ReloadWeapon()
