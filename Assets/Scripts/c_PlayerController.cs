@@ -40,6 +40,7 @@ public class c_PlayerController : MonoBehaviour
         IA_Move = InputSystem.actions.FindAction("Move");
         IA_Look = InputSystem.actions.FindAction("Look");
         IA_PrimaryAttack = InputSystem.actions.FindAction("Attack");
+        IA_SecondaryAttack = InputSystem.actions.FindAction("Attack_Secondary");
 
         PlayerCollider = gameObject.GetComponent<CapsuleCollider>();
         PlayerController = gameObject.GetComponent<CharacterController>();

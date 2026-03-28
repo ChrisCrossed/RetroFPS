@@ -138,8 +138,8 @@ public class c_PlayerWeaponLogic : MonoBehaviour
                 CurrentWeapon = WeaponObject_Shotgun;
                 break;
             case WeaponTypes.LazerGun:
-                currWeap = weapon_Shotgun;
-                CurrentWeapon = WeaponObject_Shotgun;
+                currWeap = weapon_LazerGun;
+                CurrentWeapon = WeaponObject_LazerGun;
                 break;
             default:
                 break;

@@ -336,7 +336,7 @@ MonoBehaviour:
   _damagePerProjectile: 1
   _numProjectiles: 1
   _shotsPerSecond: 1
-  _projectileObject: {fileID: 0}
+  _projectileObject: {fileID: 7506623228818417793}
 --- !u!1 &2983224041762265972
 GameObject:
   m_ObjectHideFlags: 0

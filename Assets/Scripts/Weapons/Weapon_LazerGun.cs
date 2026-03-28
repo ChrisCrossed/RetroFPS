@@ -3,6 +3,11 @@ using UnityEngine;
 
 class Weapon_LazerGun : WEAPON_OBJ
 {
+    private protected override void SetWeaponTransforms()
+    {
+        base.SetWeaponTransforms();
+    }
+
     #region Weapon Stats
 
     private protected override WeaponProjectileType ProjectileType()
@@ -36,7 +41,9 @@ class Weapon_LazerGun : WEAPON_OBJ
 
     public override void PullWeaponTrigger()
     {
-        throw new System.NotImplementedException();
+        base.PullWeaponTrigger();
+
+        print("Fire Primary");
     }
 
     public virtual void PullWeaponTrigger( RaycastHit _cameraRaycastHitObject )
@@ -48,24 +55,28 @@ class Weapon_LazerGun : WEAPON_OBJ
 
     public override void PullSecondaryWeaponTrigger()
     {
-        throw new System.NotImplementedException();
+        base.PullSecondaryWeaponTrigger();
+
+        print("Fire Secondary");
     }
 
+    /*
     public virtual void PullSecondaryWeaponTrigger(RaycastHit _cameraRaycastHitObject)
     {
         TriggerSecondaryPulled = true;
 
         CameraRaycastHitObject = _cameraRaycastHitObject;
     }
+    */
 
     public override void ReleaseWeaponTrigger()
     {
-        TriggerPulled = false;
+        base.ReleaseWeaponTrigger();
     }
 
     public override void ReleaseSecondaryWeaponTrigger()
     {
-        TriggerSecondaryPulled = false;
+        base.ReleaseSecondaryWeaponTrigger();
     }
 
     public override void ReloadWeapon()
