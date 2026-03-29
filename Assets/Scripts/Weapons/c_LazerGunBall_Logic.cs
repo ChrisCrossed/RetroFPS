@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class c_LazerGunBall_Logic : MonoBehaviour
 {
-    bool IsActive;
+    public bool IsActive {get; private set;}
     MeshRenderer _MeshRenderer;
     SphereCollider _SphereCollider;
 
@@ -11,6 +11,8 @@ public class c_LazerGunBall_Logic : MonoBehaviour
     {
         _MeshRenderer = GetComponent<MeshRenderer>();
         _SphereCollider = GetComponent<SphereCollider>();
+
+        
 
         SetBallState(false);
 
@@ -36,7 +38,8 @@ public class c_LazerGunBall_Logic : MonoBehaviour
         WillExplode = false;
 
         // Set Transform Position to front of gun
-        print("Start Pos: " + startingTransform.position);
+        gameObject.transform.position = startingTransform.position;
+        gameObject.transform.rotation = startingTransform.rotation;
 
         // Set scale appropriately (And begin scaling up to max size)
         gameObject.transform.localScale = new Vector3(1, 1, 1);

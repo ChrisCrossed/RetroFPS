@@ -3,6 +3,15 @@ using UnityEngine;
 
 class Weapon_LazerGun : WEAPON_OBJ
 {
+    c_LazerGunBall_Logic LazerGunBall;
+
+    private protected override void Start()
+    {
+        base.Start();
+
+        LazerGunBall = _projectileObject.GetComponent<c_LazerGunBall_Logic>();
+    }
+
     private protected override void SetWeaponTransforms()
     {
         base.SetWeaponTransforms();
@@ -56,6 +65,11 @@ class Weapon_LazerGun : WEAPON_OBJ
     public override void PullSecondaryWeaponTrigger()
     {
         base.PullSecondaryWeaponTrigger();
+
+        if (!LazerGunBall.IsActive)
+        {
+            LazerGunBall.FireOrb(Weapon_FrontPoint.transform);
+        }
 
         print("Fire Secondary");
     }
