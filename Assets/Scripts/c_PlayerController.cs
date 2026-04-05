@@ -18,6 +18,7 @@ public class c_PlayerController : MonoBehaviour
     CapsuleCollider PlayerCollider;
     CharacterController PlayerController;
     GameObject CameraObject;
+    GameObject WeaponObject;
 
     public InputType InputType
     {
@@ -45,8 +46,9 @@ public class c_PlayerController : MonoBehaviour
         PlayerCollider = gameObject.GetComponent<CapsuleCollider>();
         PlayerController = gameObject.GetComponent<CharacterController>();
         CameraObject = gameObject.transform.Find("Main Camera").gameObject;
+        WeaponObject = GameObject.Find("WeaponCamera").gameObject;
 
-        
+
     }
 
     void START_Settings()
@@ -115,6 +117,7 @@ public class c_PlayerController : MonoBehaviour
             CameraAngle -= v2_MouseInput.y * VerticalLookMultiplier;
             CameraAngle = Mathf.Clamp(CameraAngle, -89.9f, 89.9f);
             CameraObject.transform.localEulerAngles = new Vector3(CameraAngle, 0f, 0f);
+            WeaponObject.transform.localEulerAngles = new Vector3(CameraAngle, 0f, 0f);
         }
 
         

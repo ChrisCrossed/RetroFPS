@@ -68,7 +68,9 @@ class Weapon_LazerGun : WEAPON_OBJ
 
         if (!LazerGunBall.IsActive)
         {
-            LazerGunBall.FireOrb(Weapon_FrontPoint.transform);
+            Transform newTransform = Weapon_FrontPoint.transform;
+            newTransform.forward = CameraObject.transform.forward;
+            LazerGunBall.FireOrb(newTransform);
         }
 
         print("Fire Secondary");

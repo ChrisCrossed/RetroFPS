@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class c_LazerGunBall_Logic : MonoBehaviour
@@ -42,7 +43,7 @@ public class c_LazerGunBall_Logic : MonoBehaviour
         gameObject.transform.rotation = startingTransform.rotation;
 
         // Set scale appropriately (And begin scaling up to max size)
-        gameObject.transform.localScale = new Vector3(1, 1, 1);
+        StartCoroutine( ScaleOrb() );
 
         // Enable Visibility if Disabled
         SetBallState(true);
@@ -95,6 +96,32 @@ public class c_LazerGunBall_Logic : MonoBehaviour
         matList[1].color = new Color(matList[1].color.r, matList[1].color.g, matList[1].color.b, perc);
 
         gameObject.GetComponent<MeshRenderer>().materials = matList;
+    }
+
+    float OrbScaleSize_Start = 0.1f;
+    float OrbScaleSize_Max = 1f;
+    float OrbScale_Time = 0.5f;
+    IEnumerator ScaleOrb()
+    {
+        Vector3 orbScale;
+        
+        float time = 0f;
+
+        while (time < OrbScale_Time)
+        {
+            time += Time.deltaTime / OrbScale_Time;
+            if(time > OrbScale_Time) time = OrbScale_Time;
+
+            float scale = Mathf.Lerp(OrbScaleSize_Start, OrbScaleSize_Max, time / OrbScale_Time);
+
+            orbScale = new Vector3(scale, scale, scale);
+
+            gameObject.transform.localScale = orbScale;
+
+            yield return new WaitForEndOfFrame();
+        }
+
+        yield return null;
     }
 
     float OrbChargeMoveSpeedMult = 0.5f;
