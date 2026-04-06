@@ -1,5 +1,13 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
+
+enum OrbState
+{
+    Inactive,
+    ChargingUp,
+    Active
+}
 
 public class c_LazerGunBall_Logic : MonoBehaviour
 {
@@ -13,25 +21,22 @@ public class c_LazerGunBall_Logic : MonoBehaviour
         _MeshRenderer = GetComponent<MeshRenderer>();
         _SphereCollider = GetComponent<SphereCollider>();
 
-        
-
-        SetBallState(false);
+        SetBallState(OrbState.Inactive);
 
         // Remove the LazerBall from being parented to the Player object now that we've started the game
         gameObject.transform.parent = null;
     }
 
-    void SetBallState(bool state)
+    void SetBallState(OrbState orbState)
     {
-        IsActive = state;
-        _MeshRenderer.enabled = state;
-        _SphereCollider.enabled = state;
+        IsActive = (orbState == OrbState.Active);
+
+        _MeshRenderer.enabled = (orbState != OrbState.Inactive);
+        _SphereCollider.enabled = (orbState != OrbState.Inactive);
     }
 
     public void FireOrb(Transform startingTransform)
     {
-        IsActive = true;
-
         perc = 0f;
         PercDir = false;
 
@@ -42,11 +47,11 @@ public class c_LazerGunBall_Logic : MonoBehaviour
         gameObject.transform.position = startingTransform.position;
         gameObject.transform.rotation = startingTransform.rotation;
 
-        // Set scale appropriately (And begin scaling up to max size)
-        StartCoroutine( ScaleOrb() );
-
         // Enable Visibility if Disabled
-        SetBallState(true);
+        SetBallState(OrbState.ChargingUp);
+
+        // Set scale appropriately (And begin scaling up to max size)
+        StartCoroutine( ScaleOrb( startingTransform ) );
     }
 
     void DisperseLazers()
@@ -100,8 +105,8 @@ public class c_LazerGunBall_Logic : MonoBehaviour
 
     float OrbScaleSize_Start = 0.1f;
     float OrbScaleSize_Max = 1f;
-    float OrbScale_Time = 0.5f;
-    IEnumerator ScaleOrb()
+    float OrbScale_Time = 1.5f;
+    IEnumerator ScaleOrb(Transform gunFrontTransform)
     {
         Vector3 orbScale;
         
@@ -117,9 +122,35 @@ public class c_LazerGunBall_Logic : MonoBehaviour
             orbScale = new Vector3(scale, scale, scale);
 
             gameObject.transform.localScale = orbScale;
+            gameObject.transform.rotation = gunFrontTransform.rotation;
+            // gameObject.transform.position = gunFrontTransform.position + (gameObject.transform.forward * scale);
+            gameObject.transform.position = gunFrontTransform.position;
 
             yield return new WaitForEndOfFrame();
         }
+
+        print("Started");
+
+        SetBallState(OrbState.Active);
+
+        StartCoroutine( DestroyOrbTimer() );
+
+        yield return true;
+    }
+
+    float OrbTimer;
+    IEnumerator DestroyOrbTimer()
+    {
+        OrbTimer = 10.0f;
+
+        while (OrbTimer > 0f)
+        {
+            OrbTimer -= Time.deltaTime;
+
+            yield return new WaitForEndOfFrame();
+        }
+
+        SetBallState(OrbState.Inactive);
 
         yield return null;
     }
