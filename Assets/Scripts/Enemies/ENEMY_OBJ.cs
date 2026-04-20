@@ -5,8 +5,16 @@ using UnityEngine.AI;
 
 public enum EnemyMoveState
 {
-    Stationary,
-    Patrolling
+    Patrolling,
+    Patrolling_ShortHalt,
+    Stationary
+}
+
+[System.Serializable]
+public struct NavPoints
+{
+    public Transform transform;
+    public EnemyMoveState moveState;
 }
 
 
@@ -14,7 +22,7 @@ public class ENEMY_OBJ : MonoBehaviour
 {
     private protected int Health;
     [SerializeField, Range(50, 250)] private protected int HEALTH_MAX = 100;
-    [SerializeField] protected Transform[] NavigationLocations;
+    [SerializeField] protected NavPoints[] NavPoints;
 
     NavMeshAgent ThisNavMeshAgent;
 
@@ -23,7 +31,7 @@ public class ENEMY_OBJ : MonoBehaviour
     {
         START_Connections();
 
-        if(NavigationLocations.Length > 0)
+        if(NavPoints.Length > 0)
         {
             SetEnemyState(EnemyMoveState.Patrolling);
 
@@ -38,7 +46,7 @@ public class ENEMY_OBJ : MonoBehaviour
         Health = HEALTH_MAX;
         ThisNavMeshAgent.stoppingDistance = 1.0f;
 
-        ThisNavMeshAgent.SetDestination(NavigationLocations[PatrolLocation].position);
+        ThisNavMeshAgent.SetDestination( NavPoints[ PatrolLocation ].transform.position );
     }
 
     #region Health and Damage
@@ -61,10 +69,11 @@ public class ENEMY_OBJ : MonoBehaviour
     }
 
     int PatrolLocation;
+    float PatrolHaltTimer;
     
     IEnumerator CyclePatrolLocations()
     {
-        while( MyMoveState == EnemyMoveState.Patrolling )
+        while( MyMoveState == EnemyMoveState.Patrolling || MyMoveState == EnemyMoveState.Patrolling_ShortHalt )
         {
             print("---");
             print(PatrolLocation);
@@ -79,6 +88,11 @@ public class ENEMY_OBJ : MonoBehaviour
 
             print(PatrolLocation);
 
+            if(MyMoveState == EnemyMoveState.Patrolling_ShortHalt)
+            {
+
+            }
+
             // yield return new WaitForSeconds(Random.Range(2.0f, 4.0f));
             // yield return new WaitForSeconds(0.1f);
 
@@ -86,7 +100,7 @@ public class ENEMY_OBJ : MonoBehaviour
 
             yield return new WaitForEndOfFrame();
 
-            ThisNavMeshAgent.SetDestination(NavigationLocations[PatrolLocation].position);
+            ThisNavMeshAgent.SetDestination(NavPoints[PatrolLocation].transform.position);
         }
 
         yield return null;
@@ -97,20 +111,40 @@ public class ENEMY_OBJ : MonoBehaviour
     // Update is called once per frame
     private protected virtual void Update()
     {
-        print("---");
-        print(PatrolLocation);
-
-        if (ThisNavMeshAgent.remainingDistance < 0.1f)
+        if(MyMoveState == EnemyMoveState.Patrolling || MyMoveState == EnemyMoveState.Patrolling_ShortHalt)
         {
-            ThisNavMeshAgent.isStopped = true;
+            if(PatrolHaltTimer > 0f)
+            {
+                PatrolHaltTimer -= Time.deltaTime;
 
-            PatrolLocation = ++PatrolLocation % NavigationLocations.Length;
+                if(PatrolHaltTimer > 0f)
+                    return;
 
-            print(PatrolLocation);
+                ThisNavMeshAgent.isStopped = false;
+            }
 
-            ThisNavMeshAgent.isStopped = false;
+            if (ThisNavMeshAgent.remainingDistance < 0.1f)
+            {
+                PatrolLocation = ++PatrolLocation % NavPoints.Length;
 
-            ThisNavMeshAgent.SetDestination(NavigationLocations[PatrolLocation].position);
+                ThisNavMeshAgent.isStopped = false;
+
+                ThisNavMeshAgent.SetDestination(NavPoints[PatrolLocation].transform.position);
+
+                int nextLocationNum = ((PatrolLocation - 1) + NavPoints.Length) % NavPoints.Length;
+
+                if (NavPoints[nextLocationNum].moveState == EnemyMoveState.Patrolling_ShortHalt)
+                {
+                    ThisNavMeshAgent.isStopped = true;
+
+                    PatrolHaltTimer = Random.Range(2.0f, 4.0f);
+
+                    print("Waiting Time: " + PatrolHaltTimer);
+
+                    SetEnemyState(EnemyMoveState.Patrolling);
+                }
+            }
         }
+
     }
 }
