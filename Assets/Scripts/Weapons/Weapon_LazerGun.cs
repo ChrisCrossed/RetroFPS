@@ -15,6 +15,9 @@ class Weapon_LazerGun : WEAPON_OBJ
     private protected override void SetWeaponTransforms()
     {
         base.SetWeaponTransforms();
+
+        Cylinder = GameObject.Find("BulletCastObject");
+        Cylinder.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
     }
 
     #region Weapon Stats
@@ -53,14 +56,13 @@ class Weapon_LazerGun : WEAPON_OBJ
         base.PullWeaponTrigger();
 
         print("Fire Primary");
-    }
 
-    public virtual void PullWeaponTrigger( RaycastHit _cameraRaycastHitObject )
-    {
-        CameraRaycastHitObject = _cameraRaycastHitObject;
+        // CameraRaycastHitObject = _cameraRaycastHitObject;
 
         TriggerPulled = true;
+        Cylinder.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = true;
     }
+
 
     public override void PullSecondaryWeaponTrigger()
     {
@@ -88,6 +90,10 @@ class Weapon_LazerGun : WEAPON_OBJ
     public override void ReleaseWeaponTrigger()
     {
         base.ReleaseWeaponTrigger();
+
+        TriggerPulled = false;
+
+        Cylinder.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
     }
 
     public override void ReleaseSecondaryWeaponTrigger()
@@ -101,11 +107,14 @@ class Weapon_LazerGun : WEAPON_OBJ
     }
 
     float DrawWeaponTime = 0.1f;
+    Coroutine WeaponCoroutine;
     public override float DrawWeapon()
     {
         // This is intended to get the animation for the weapon and play it.
         // This might not be the right way to go about this in the future.
-        StartCoroutine(DrawWeaponAnimation());
+        StartCoroutine( DrawWeaponAnimation() );
+
+        WeaponCoroutine = StartCoroutine( PrimaryFireRaycast() );
 
         return DrawWeaponTime;
     }
@@ -118,7 +127,9 @@ class Weapon_LazerGun : WEAPON_OBJ
     float HolsterWeaponTime = 0.1f;
     public override float HolsterWeapon()
     {
-        StartCoroutine(HolsterWeaponAnimation());
+        StartCoroutine( HolsterWeaponAnimation() );
+
+        StopCoroutine( WeaponCoroutine );
 
         return HolsterWeaponTime;
     }
@@ -133,5 +144,40 @@ class Weapon_LazerGun : WEAPON_OBJ
     protected override void Update()
     {
         
+    }
+
+    GameObject Cylinder;
+    private IEnumerator PrimaryFireRaycast()
+    {
+        RaycastHit _hit;
+        int layerMask = LayerMask.GetMask("Water", "Geo", "GameObject");
+
+        
+
+        while( true )
+        {
+            if(TriggerPulled)
+            {
+                Cylinder.transform.position = Weapon_FrontPoint.position;
+                Cylinder.transform.forward = Weapon_FrontPoint.forward;
+                float distance = 50f;
+
+                if (Physics.Raycast(CameraObject.transform.position, CameraObject.transform.forward, out _hit, distance, layerMask))
+                {
+                    distance = _hit.distance;
+                }
+                else
+                {
+                    Vector3 finalPos = CameraObject.transform.position + (CameraObject.transform.forward * 50f);
+                    Debug.DrawLine(Weapon_FrontPoint.position, finalPos, Color.red, Time.deltaTime);
+                }
+
+                Cylinder.transform.localScale = new Vector3(1f, 1f, distance);
+            }
+
+            yield return new WaitForEndOfFrame();
+        }
+
+        yield return null;
     }
 }
