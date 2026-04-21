@@ -53,7 +53,7 @@ public class ENEMY_OBJ : MonoBehaviour
 
     public virtual void Damage(int _damage)
     {
-
+        print("TOOK DAMAGE: " + _damage);
     }
 
     #endregion Health and Damage

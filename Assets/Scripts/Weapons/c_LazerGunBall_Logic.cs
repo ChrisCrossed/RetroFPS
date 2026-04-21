@@ -173,4 +173,19 @@ public class c_LazerGunBall_Logic : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        ENEMY_OBJ enemyObj = other.GetComponent<ENEMY_OBJ>();
+
+        if (enemyObj)
+        {
+            enemyObj.Damage(77);
+        }
+    }
+
 }
