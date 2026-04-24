@@ -159,8 +159,10 @@ public class c_LazerGunBall_Logic : MonoBehaviour
     float ChargeUpPerc = 0f;
     float ChargeUpPerc_MaxTime = 1f;
     bool WillExplode = false;
-    void ChargeOrb()
+    public void ChargeOrb()
     {
+        print("CHARGE");
+
         MoveSpeed = MoveSpeed_MAX * OrbChargeMoveSpeedMult;
 
         if(ChargeUpPerc < 1f)

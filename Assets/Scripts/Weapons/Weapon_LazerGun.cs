@@ -152,8 +152,6 @@ class Weapon_LazerGun : WEAPON_OBJ
         RaycastHit _hit;
         int layerMask = LayerMask.GetMask("Water", "Geo", "GameObject");
 
-        
-
         while( true )
         {
             if(TriggerPulled)
@@ -165,6 +163,11 @@ class Weapon_LazerGun : WEAPON_OBJ
                 if (Physics.Raycast(CameraObject.transform.position, CameraObject.transform.forward, out _hit, distance, layerMask))
                 {
                     distance = _hit.distance;
+
+                    if(_hit.collider.tag == "LazerGunBall")
+                    {
+                        _hit.transform.GetComponent<c_LazerGunBall_Logic>().ChargeOrb();
+                    }
                 }
                 else
                 {
