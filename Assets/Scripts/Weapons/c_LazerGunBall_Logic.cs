@@ -14,17 +14,19 @@ public class c_LazerGunBall_Logic : MonoBehaviour
     public bool IsActive {get; private set;}
     MeshRenderer _MeshRenderer;
     SphereCollider _SphereCollider;
+    GameObject _PlayerObjectContainer;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _MeshRenderer = GetComponent<MeshRenderer>();
         _SphereCollider = GetComponent<SphereCollider>();
+        _PlayerObjectContainer = GameObject.Find("PlayerObjectContainer");
 
         SetBallState(OrbState.Inactive);
 
         // Remove the LazerBall from being parented to the Player object now that we've started the game
-        gameObject.transform.parent = null;
+        gameObject.transform.parent = _PlayerObjectContainer.transform;
     }
 
     void SetBallState(OrbState orbState)

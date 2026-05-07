@@ -62,6 +62,12 @@ public class c_ElevatorScript : MonoBehaviour
             if (flip) OpenDoors();
             else CloseDoors();
         }
+
+        if(Input.GetKeyDown(KeyCode.O))
+        {
+            UnlockFloorNumber(5);
+            GoToFloorNumber(5);
+        }
     }
 
     void Update_DoorStatus()
