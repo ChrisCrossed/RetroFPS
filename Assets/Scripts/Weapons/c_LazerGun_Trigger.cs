@@ -17,6 +17,20 @@ public class c_LazerGun_Trigger : MonoBehaviour
         transform.parent = _PlayerObjectContainer.transform;
     }
 
+    public void InitOrbTrigger(Vector3 _pos, Vector3 _eulerAng, Vector3 _scale)
+    {
+        transform.position = _pos;
+        transform.eulerAngles = _eulerAng;
+        transform.localScale = _scale;
+
+        GetComponent<BoxCollider>().enabled = true;
+    }
+
+    void DisableOrbTrigger()
+    {
+        GetComponent<BoxCollider>().enabled = false;
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {

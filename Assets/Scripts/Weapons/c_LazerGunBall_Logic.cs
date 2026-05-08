@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -16,6 +17,9 @@ public class c_LazerGunBall_Logic : MonoBehaviour
     SphereCollider _SphereCollider;
     GameObject _PlayerObjectContainer;
 
+    GameObject GO_LazerGun_Trigger;
+    c_LazerGun_Trigger LazerGun_TriggerLogic;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -27,6 +31,8 @@ public class c_LazerGunBall_Logic : MonoBehaviour
 
         // Remove the LazerBall from being parented to the Player object now that we've started the game
         gameObject.transform.parent = _PlayerObjectContainer.transform;
+        GO_LazerGun_Trigger = _PlayerObjectContainer.transform.Find("GO_LazerGun_Trigger").gameObject;
+        LazerGun_TriggerLogic = GO_LazerGun_Trigger.GetComponent<c_LazerGun_Trigger>();
     }
 
     void SetBallState(OrbState orbState)
@@ -132,6 +138,31 @@ public class c_LazerGunBall_Logic : MonoBehaviour
         }
 
         print("Started");
+
+        float triggerWidth = 10f;
+        float triggerLength = 1000f;
+
+        Vector3 triggerPosition = gunFrontTransform.position + (gunFrontTransform.forward * triggerLength / 2f);
+        Vector3 triggerEulerAngles = gunFrontTransform.forward;
+        Vector3 triggerScale = new Vector3(triggerWidth, triggerWidth, triggerLength);
+
+        RaycastHit _hit;
+        List<TagDictionary> tagList = new List<TagDictionary>();
+        tagList.Add(TagDictionary.Default);
+        tagList.Add(TagDictionary.Ground);
+        tagList.Add(TagDictionary.Wall);
+        
+        LayerMask layerMask = Tag.GetLayerMask(tagList);
+        
+        if (Physics.Raycast(gunFrontTransform.position, gunFrontTransform.forward, out _hit, triggerLength, layerMask))
+        {
+            triggerLength = _hit.distance + (triggerWidth / 2f);
+            triggerScale.z = triggerLength;
+            triggerPosition = gunFrontTransform.position + (gunFrontTransform.forward * triggerLength / 2f);
+        }
+
+
+        LazerGun_TriggerLogic.InitOrbTrigger(triggerPosition, triggerEulerAngles, triggerScale);
 
         SetBallState(OrbState.Active);
 
