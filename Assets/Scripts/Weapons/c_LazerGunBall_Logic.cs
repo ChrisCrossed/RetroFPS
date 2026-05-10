@@ -139,30 +139,37 @@ public class c_LazerGunBall_Logic : MonoBehaviour
 
         print("Started");
 
-        float triggerWidth = 10f;
-        float triggerLength = 1000f;
+        float triggerWidth = 1;
+        float triggerRaycastLength = 100;
 
-        Vector3 triggerPosition = gunFrontTransform.position + (gunFrontTransform.forward * triggerLength / 2f);
-        Vector3 triggerEulerAngles = gunFrontTransform.forward;
-        Vector3 triggerScale = new Vector3(triggerWidth, triggerWidth, triggerLength);
+        Vector3 triggerPosition = (gunFrontTransform.position + (gunFrontTransform.forward * triggerRaycastLength)) / 2f;
+
+        Vector3 triggerEuler = new Vector3(0f, 0f, 0f);
+        triggerEuler.x = GameObject.Find("WeaponCamera").gameObject.transform.eulerAngles.x;
+        triggerEuler.y = GameObject.Find("Player").gameObject.transform.eulerAngles.y;
+
+        Vector3 triggerScale = new Vector3(triggerWidth, triggerWidth, triggerRaycastLength);
 
         RaycastHit _hit;
+        /*
         List<TagDictionary> tagList = new List<TagDictionary>();
         tagList.Add(TagDictionary.Default);
         tagList.Add(TagDictionary.Ground);
         tagList.Add(TagDictionary.Wall);
+        */
         
-        LayerMask layerMask = Tag.GetLayerMask(tagList);
+        LayerMask layerMask = LayerMask.GetMask("Default", "Geo");
         
-        if (Physics.Raycast(gunFrontTransform.position, gunFrontTransform.forward, out _hit, triggerLength, layerMask))
+        if (Physics.Raycast(gunFrontTransform.position, gunFrontTransform.forward, out _hit, triggerRaycastLength, layerMask))
         {
-            triggerLength = _hit.distance + (triggerWidth / 2f);
-            triggerScale.z = triggerLength;
-            triggerPosition = gunFrontTransform.position + (gunFrontTransform.forward * triggerLength / 2f);
+            print("Hit: " + _hit.collider.tag);
+
+            triggerScale.z = Vector3.Distance(gunFrontTransform.position, _hit.point +(gunFrontTransform.forward * 0.5f * triggerWidth));
+            triggerPosition = (gunFrontTransform.position + _hit.point) / 2f;
         }
 
 
-        LazerGun_TriggerLogic.InitOrbTrigger(triggerPosition, triggerEulerAngles, triggerScale);
+        LazerGun_TriggerLogic.InitOrbTrigger(triggerPosition, triggerEuler, triggerScale);
 
         SetBallState(OrbState.Active);
 
