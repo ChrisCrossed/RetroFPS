@@ -20,6 +20,9 @@ public class c_LazerGunBall_Logic : MonoBehaviour
     GameObject GO_LazerGun_Trigger;
     c_LazerGun_Trigger LazerGun_TriggerLogic;
 
+    GameObject GO_WeaponCamera;
+    GameObject GO_Player;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -33,6 +36,9 @@ public class c_LazerGunBall_Logic : MonoBehaviour
         gameObject.transform.parent = _PlayerObjectContainer.transform;
         GO_LazerGun_Trigger = _PlayerObjectContainer.transform.Find("GO_LazerGun_Trigger").gameObject;
         LazerGun_TriggerLogic = GO_LazerGun_Trigger.GetComponent<c_LazerGun_Trigger>();
+
+        GO_WeaponCamera = GameObject.Find("WeaponCamera").gameObject;
+        GO_Player = GameObject.Find("Player").gameObject;
     }
 
     void SetBallState(OrbState orbState)
@@ -140,24 +146,26 @@ public class c_LazerGunBall_Logic : MonoBehaviour
         print("Started");
 
         float triggerWidth = 1;
-        float triggerRaycastLength = 100;
+        float triggerRaycastLength = 20;
 
-        Vector3 triggerPosition = (gunFrontTransform.position + (gunFrontTransform.forward * triggerRaycastLength)) / 2f;
+        /// NOTE
+        /// 
+        /// This currently works, but I feel like I'm drinking crazy juice.
+        /// I'm currently forgetting the difference between .forward and .eulerAngles for assigning the fwd dir of the trigger.
+        /// I might have to revisit this in the future but it works for now.
+        /// Where I'm confused: When assigning the fwd / pos of the trigger when no obj exists within raycast dist, the trigger pos is way off.
+        /// Again, this works, but my brain is tired. It'll probably click when I'm less tired.
 
-        Vector3 triggerEuler = new Vector3(0f, 0f, 0f);
-        triggerEuler.x = GameObject.Find("WeaponCamera").gameObject.transform.eulerAngles.x;
-        triggerEuler.y = GameObject.Find("Player").gameObject.transform.eulerAngles.y;
+        // Messy, but combines the Horiz Euler of the player with the Vert Euler of the Camera to create the Forward Vector. DO NOT NORMALIZE.
+        Vector3 triggerEuler = new Vector3(GO_WeaponCamera.transform.eulerAngles.x, GO_Player.transform.eulerAngles.y, 0f);
+
+        // Midpoint Formula
+        Vector3 fwdPoint = gunFrontTransform.position + (gunFrontTransform.forward * triggerRaycastLength);
+        Vector3 triggerPosition = (gunFrontTransform.position + fwdPoint) / 2f;
 
         Vector3 triggerScale = new Vector3(triggerWidth, triggerWidth, triggerRaycastLength);
 
         RaycastHit _hit;
-        /*
-        List<TagDictionary> tagList = new List<TagDictionary>();
-        tagList.Add(TagDictionary.Default);
-        tagList.Add(TagDictionary.Ground);
-        tagList.Add(TagDictionary.Wall);
-        */
-        
         LayerMask layerMask = LayerMask.GetMask("Default", "Geo");
         
         if (Physics.Raycast(gunFrontTransform.position, gunFrontTransform.forward, out _hit, triggerRaycastLength, layerMask))
