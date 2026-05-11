@@ -17,7 +17,7 @@ public struct NavPoints
     public EnemyMoveState moveState;
 }
 
-
+[RequireComponent(typeof(Rigidbody))]
 public class ENEMY_OBJ : MonoBehaviour
 {
     private protected int Health;
@@ -26,10 +26,15 @@ public class ENEMY_OBJ : MonoBehaviour
 
     NavMeshAgent ThisNavMeshAgent;
 
+    Rigidbody this_Rigidbody;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private protected virtual void Start()
     {
         START_Connections();
+
+        if (NavPoints.Length == 0)
+            SetEnemyState(EnemyMoveState.Stationary);
 
         if(NavPoints.Length > 0)
         {
@@ -41,12 +46,18 @@ public class ENEMY_OBJ : MonoBehaviour
 
     private protected virtual void START_Connections()
     {
-        ThisNavMeshAgent = GetComponent<NavMeshAgent>();
-
         Health = HEALTH_MAX;
-        ThisNavMeshAgent.stoppingDistance = 1.0f;
 
-        ThisNavMeshAgent.SetDestination( NavPoints[ PatrolLocation ].transform.position );
+        if (NavPoints.Length > 0)
+        {
+            ThisNavMeshAgent = GetComponent<NavMeshAgent>();
+            this_Rigidbody = GetComponent<Rigidbody>();
+            this_Rigidbody.isKinematic = true;
+
+            ThisNavMeshAgent.stoppingDistance = 1.0f;
+
+            ThisNavMeshAgent.SetDestination(NavPoints[PatrolLocation].transform.position);
+        }
     }
 
     #region Health and Damage
@@ -123,6 +134,17 @@ public class ENEMY_OBJ : MonoBehaviour
                 ThisNavMeshAgent.isStopped = false;
             }
 
+            if (MyMoveState == EnemyMoveState.Stationary)
+            {
+                if(this_Rigidbody.collisionDetectionMode != CollisionDetectionMode.Continuous)
+                    this_Rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+
+                return;
+            }
+
+            if (this_Rigidbody.collisionDetectionMode != CollisionDetectionMode.Discrete)
+                this_Rigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
+
             if (ThisNavMeshAgent.remainingDistance < 0.1f)
             {
                 PatrolLocation = ++PatrolLocation % NavPoints.Length;
@@ -145,6 +167,5 @@ public class ENEMY_OBJ : MonoBehaviour
                 }
             }
         }
-
     }
 }
